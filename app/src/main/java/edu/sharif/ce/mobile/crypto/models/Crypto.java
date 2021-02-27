@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Crypto {
     private String id;
-    private int price;
+    private double price;
     private String name;
     private String symbol;
     private String imageUrl;
@@ -38,11 +38,11 @@ public class Crypto {
         this.id = id;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

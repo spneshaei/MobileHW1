@@ -1,6 +1,5 @@
 package edu.sharif.ce.mobile.crypto.utils;
 
-import android.accounts.NetworkErrorException;
 import android.util.Log;
 
 import com.squareup.okhttp.Call;
@@ -10,8 +9,16 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
+
+import edu.sharif.ce.mobile.crypto.models.Crypto;
+
 
 public class NetworkInterface {
     private final static String API_KEY_FOR_COIN_MARKET_CAP = "ae590806-c68e-46c5-8577-e5640c7d4b41";
@@ -40,7 +47,27 @@ public class NetworkInterface {
                 if (!response.isSuccessful()) {
                     Log.e("network2", response.body().string());
                 } else {
-                    Log.d("response", response.body().string());
+                    String body = response.body().string();
+                    Log.d("response", body);
+                    try {
+                        ArrayList<Crypto> cryptoArrayList = new ArrayList<>();
+                        JSONObject outerObj = new JSONObject(body);
+                        Log.d("json", outerObj.get("data").toString());
+                        JSONArray data_array = new JSONArray(outerObj.getString("data"));
+                        for (int i = 0; i < data_array.length(); i++) {
+                            JSONObject object = (JSONObject) data_array.get(i);
+                            Crypto crypto = new Crypto(object.getString("id"), object.getString("name"));
+                            crypto.setSymbol(object.getString("symbol"));
+                            JSONObject inner_obj = object.getJSONObject("quote").getJSONObject("USD");
+                            crypto.setPrice(inner_obj.getDouble("price"));
+                            crypto.setPercentChange1H(inner_obj.getDouble("percent_change_1h"));
+                            crypto.setPercentChange24H(inner_obj.getDouble("percent_change_24h"));
+                            crypto.setPercentChange7D(inner_obj.getDouble("percent_change_7d"));
+                            cryptoArrayList.add(crypto);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
+                    }
                 }
             }
         });
