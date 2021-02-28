@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import edu.sharif.ce.mobile.crypto.utils.NetworkInterface;
+import edu.sharif.ce.mobile.crypto.notifhandling.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -12,6 +13,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        NetworkInterface.getCryptoData(1,5);
+//        NetworkInterface.getCryptoData(1,5);
     }
 }
