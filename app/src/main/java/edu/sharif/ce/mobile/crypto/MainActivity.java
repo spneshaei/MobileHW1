@@ -11,6 +11,7 @@ import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final WeakHandler handler = new WeakHandler(this);
     private static class WeakHandler extends Handler implements Subscriber {
         private final WeakReference<MainActivity> activity;
 

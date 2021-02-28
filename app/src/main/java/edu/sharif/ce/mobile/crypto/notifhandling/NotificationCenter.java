@@ -11,7 +11,7 @@ import java.util.Objects;
  * All Rights Reserved
  */
 public class NotificationCenter {
-    private static HashMap<Integer, ArrayList<Handler>> subscribers;
+    private static HashMap<Integer, ArrayList<Handler>> subscribers = new HashMap<>();
 
     public static void registerForNotification(Handler handler, int id) {
         if (!subscribers.containsKey(id) || subscribers.get(id) == null) {

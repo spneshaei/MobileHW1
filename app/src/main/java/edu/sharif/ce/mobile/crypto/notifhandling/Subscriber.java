@@ -7,5 +7,5 @@ import android.os.Message;
  * All Rights Reserved
  */
 public interface Subscriber {
-    void handleMessage(Message msg);
+    boolean sendEmptyMessage(int what);
 }
