@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import edu.sharif.ce.mobile.crypto.models.Crypto;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationCenter;
 
 /**
@@ -32,10 +33,17 @@ public class Rester {
         try {
             String data = readFromFile(context, "crypto.txt");
             // data is in the cache
-
+            setCryptosFromJSON(data);
         } catch (Exception ignored) {
         }
 
+    }
+
+    private void setCryptosFromJSON(String json) {
+//        Crypto[] respone = new Gson().fromJson(json, TestJson[].class);
+//        for (TestJson s : respone) {
+//            System.out.println("File name: " + s.getFile_name());
+//        }
     }
 
     private String readFromFile(Context context, String file) throws Exception {
