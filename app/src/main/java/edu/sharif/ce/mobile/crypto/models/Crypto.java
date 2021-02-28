@@ -106,7 +106,7 @@ public class Crypto {
     }
 
     public static ArrayList<Crypto> getCryptos() {
-        return (ArrayList<Crypto>) Collections.unmodifiableList(cryptos);
+        return new ArrayList<>(Collections.unmodifiableList(cryptos));
     }
 
     private static void clearCryptos() {

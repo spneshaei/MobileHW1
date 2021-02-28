@@ -1,18 +1,24 @@
 package edu.sharif.ce.mobile.crypto.utils;
 
 import android.content.Context;
-import android.util.Log;
+
+import com.google.gson.Gson;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import edu.sharif.ce.mobile.crypto.models.Crypto;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationCenter;
+import edu.sharif.ce.mobile.crypto.notifhandling.NotificationID;
 
 /**
  * Created by Seyyed Parsa Neshaei on 2/28/21
@@ -32,18 +38,36 @@ public class Rester {
     public void getCryptoData(Context context) {
         try {
             String data = readFromFile(context, "crypto.txt");
-            // data is in the cache
-            setCryptosFromJSON(data);
+            if (!data.equals("")) {
+                // data is in the cache
+                setCryptosFromJSON(data);
+                NotificationCenter.notify(NotificationID.Crypto.DATA_LOADED_FROM_CACHE);
+            }
         } catch (Exception ignored) {
         }
+        if (!isConnected()) {
+            NotificationCenter.notify(NotificationID.Crypto.NO_INTERNET_CONNECTION);
+            return;
+        }
+//        NetworkInterface.getCryptoData();
+    }
 
+    private boolean isConnected() {
+        try {
+            int timeoutMs = 1500;
+            Socket sock = new Socket();
+            SocketAddress sockaddr = new InetSocketAddress("8.8.8.8", 53);
+            sock.connect(sockaddr, timeoutMs);
+            sock.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     private void setCryptosFromJSON(String json) {
-//        Crypto[] respone = new Gson().fromJson(json, TestJson[].class);
-//        for (TestJson s : respone) {
-//            System.out.println("File name: " + s.getFile_name());
-//        }
+        Crypto[] cryptos = new Gson().fromJson(json, Crypto[].class);
+        Crypto.setCryptos(new ArrayList<>(Arrays.asList(cryptos)));
     }
 
     private String readFromFile(Context context, String file) throws Exception {

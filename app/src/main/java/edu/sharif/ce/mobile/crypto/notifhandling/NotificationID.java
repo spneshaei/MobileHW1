@@ -5,5 +5,8 @@ package edu.sharif.ce.mobile.crypto.notifhandling;
  * All Rights Reserved
  */
 public class NotificationID {
-    public static int firstNotif = 1;
+    public static class Crypto {
+        public static int DATA_LOADED_FROM_CACHE = 1;
+        public static int NO_INTERNET_CONNECTION = 2;
+    }
 }

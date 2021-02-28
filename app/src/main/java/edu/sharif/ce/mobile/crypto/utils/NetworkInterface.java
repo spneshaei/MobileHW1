@@ -67,7 +67,6 @@ public class NetworkInterface {
                             cryptoArrayList.add(crypto);
                         }
                         _cryptoArrayList = cryptoArrayList;
-                        ;
                         NetworkInterface.getCryptoImageUrls(cryptoArrayList);
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
@@ -116,6 +115,7 @@ public class NetworkInterface {
                             JSONObject object = data.getJSONObject(crypto.getId());
                             crypto.setImageUrl(object.getString("logo"));
                         }
+
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
                     }
