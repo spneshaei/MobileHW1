@@ -1,8 +1,11 @@
 package edu.sharif.ce.mobile.crypto.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Crypto {
+    private static ArrayList<Crypto> cryptos;
+
     private String id;
     private double price;
     private String name;
@@ -100,5 +103,22 @@ public class Crypto {
 
     public ArrayList<Candle> getLastMonthCandles() {
         return lastMonthCandles;
+    }
+
+    public static ArrayList<Crypto> getCryptos() {
+        return (ArrayList<Crypto>) Collections.unmodifiableList(cryptos);
+    }
+
+    private static void clearCryptos() {
+        cryptos.clear();
+    }
+
+    public static void addCrypto(Crypto crypto) {
+        cryptos.add(crypto);
+    }
+
+    public static void setCryptos(ArrayList<Crypto> newCryptos) {
+        clearCryptos();
+        cryptos.addAll(newCryptos);
     }
 }
