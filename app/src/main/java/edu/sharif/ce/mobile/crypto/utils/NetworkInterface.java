@@ -22,7 +22,7 @@ import edu.sharif.ce.mobile.crypto.models.Crypto;
 
 public class NetworkInterface {
     private final static String API_KEY_FOR_COIN_MARKET_CAP = "ae590806-c68e-46c5-8577-e5640c7d4b41";
-    private static ArrayList<Crypto> _cryptoArrayList = new ArrayList<>();
+    private static ArrayList<Crypto> cryptoArrayList;
 
     public static void getCryptoData(int start, int limit) {
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -66,8 +66,7 @@ public class NetworkInterface {
                             crypto.setPercentChange7D(inner_obj.getDouble("percent_change_7d"));
                             cryptoArrayList.add(crypto);
                         }
-                        _cryptoArrayList = cryptoArrayList;
-                        ;
+                        NetworkInterface.cryptoArrayList = cryptoArrayList;
                         NetworkInterface.getCryptoImageUrls(cryptoArrayList);
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
@@ -110,7 +109,7 @@ public class NetworkInterface {
                     String body = response.body().string();
                     Log.d("response", body);
                     try {
-                        ArrayList<Crypto> cryptoArrayList = _cryptoArrayList;
+                        ArrayList<Crypto> cryptoArrayList = NetworkInterface.cryptoArrayList;
                         JSONObject data = new JSONObject(body).getJSONObject("data");
                         for (Crypto crypto : cryptoArrayList) {
                             JSONObject object = data.getJSONObject(crypto.getId());
@@ -122,6 +121,10 @@ public class NetworkInterface {
                 }
             }
         });
+    }
+
+    public static void getCandles(){
+
     }
 }
 
