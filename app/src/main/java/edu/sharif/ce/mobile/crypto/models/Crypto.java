@@ -29,6 +29,14 @@ public class Crypto {
         return id;
     }
 
+    public void setLastWeekCandles(ArrayList<Candle> lastWeekCandles) {
+        this.lastWeekCandles = lastWeekCandles;
+    }
+
+    public void setLastMonthCandles(ArrayList<Candle> lastMonthCandles) {
+        this.lastMonthCandles = lastMonthCandles;
+    }
+
     public void addCandleToLastWeekCandles(Candle candle) {
         this.lastWeekCandles.add(candle);
     }

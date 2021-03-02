@@ -17,12 +17,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import edu.sharif.ce.mobile.crypto.models.Candle;
 import edu.sharif.ce.mobile.crypto.models.Crypto;
 
 
 public class NetworkInterface {
     private final static String API_KEY_FOR_COIN_MARKET_CAP = "ae590806-c68e-46c5-8577-e5640c7d4b41";
-    private static ArrayList<Crypto> cryptoArrayList;
+    private final static String API_KEY_FOR_COIN_API = "B7F93831-CA70-46CC-A721-E73AD6ED0282";
+    public static ArrayList<Crypto> cryptoArrayList;
 
     public static void getCryptoData(int start, int limit) {
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -123,7 +125,56 @@ public class NetworkInterface {
         });
     }
 
-    public static void getCandles(){
+    public static void getCandles(final Crypto crypto, final int range) {
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        String miniUrl = "period_id=1DAY".concat("&limit=").concat(String.valueOf(range));
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://rest.coinapi.io/v1/ohlcv/".concat(crypto.getSymbol()).concat("/USD/ latest?".concat(miniUrl)))
+                .newBuilder();
+
+        String url = urlBuilder.build().toString();
+
+        final Request request = new Request.Builder().url(url)
+                .addHeader("X-CoinAPI-Key", API_KEY_FOR_COIN_API)
+                .build();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.e("network", Objects.requireNonNull(e.getMessage()));
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.e("network", response.body().string());
+                } else {
+                    String body = response.body().string();
+                    Log.d("response", body);
+                    try {
+                        ArrayList<Candle> candleArrayList = new ArrayList<>();
+                        JSONArray data_array = new JSONArray(body);
+                        for (int i = 0; i < range; i++) {
+                            JSONObject object = (JSONObject) data_array.get(i);
+                            double high = object.getDouble("price_high");
+                            double low = object.getDouble("price_low");
+                            double close = object.getDouble("price_close");
+                            double open = object.getDouble("price_open");
+                            candleArrayList.add(new Candle(crypto.getId(), high, low, close, open));
+                        }
+                        if (range == 30) {
+                            crypto.setLastMonthCandles(candleArrayList);
+                        } else if (range == 7) {
+                            crypto.setLastWeekCandles(candleArrayList);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
+                    }
+                }
+            }
+        });
 
     }
 }

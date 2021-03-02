@@ -7,7 +7,10 @@ import android.os.Handler;
 import android.os.Message;
 
 import java.lang.ref.WeakReference;
+
+import edu.sharif.ce.mobile.crypto.models.Crypto;
 import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
+import edu.sharif.ce.mobile.crypto.utils.NetworkInterface;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        NetworkInterface.getCryptoData(1,5);
+//        Crypto crypto = new Crypto("1","Bitcoin");
+//        crypto.setSymbol("BTC");
+//        NetworkInterface.getCandles(crypto,7);
     }
 }
