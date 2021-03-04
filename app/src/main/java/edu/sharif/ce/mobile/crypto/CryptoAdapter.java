@@ -3,6 +3,7 @@ package edu.sharif.ce.mobile.crypto;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,11 +46,34 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Crypto thisCrypto = mCryptos.get(position);
         Glide.with(context).load(thisCrypto.getImageUrl()).into(holder.image);
-        holder.name.setText(thisCrypto.getName());
+        holder.name.setText(" " + thisCrypto.getName());
+        holder.symbol.setText(thisCrypto.getSymbol() + " |");
         holder.price.setText("$" + thisCrypto.getPrice());
         holder.oneHour.setText("1H: " + thisCrypto.getPercentChange1H() + "%");
+
+        int green = Color.parseColor("#3EA623");
+        int red = Color.parseColor("#B72C28");
+
+        if (thisCrypto.getPercentChange1H() < 0) {
+            holder.oneHour.setTextColor(red);
+        } else {
+            holder.oneHour.setTextColor(green);
+        }
         holder.oneDay.setText("1D: " + thisCrypto.getPercentChange24H() + "%");
+
+        if (thisCrypto.getPercentChange24H() < 0) {
+            holder.oneDay.setTextColor(red);
+        } else {
+            holder.oneDay.setTextColor(green);
+        }
+
         holder.oneWeek.setText("7D: " + thisCrypto.getPercentChange7D() + "%");
+
+        if (thisCrypto.getPercentChange7D() < 0) {
+            holder.oneWeek.setTextColor(red);
+        } else {
+            holder.oneWeek.setTextColor(green);
+        }
     }
 
     @Override
@@ -64,6 +88,7 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         public TextView oneHour;
         public TextView oneDay;
         public TextView oneWeek;
+        public TextView symbol;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -73,6 +98,7 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
             oneHour = itemView.findViewById(R.id.price_one_hour);
             oneDay = itemView.findViewById(R.id.price_one_day);
             oneWeek = itemView.findViewById(R.id.price_one_week);
+            symbol = itemView.findViewById(R.id.crypto_symbol);
         }
     }
 }

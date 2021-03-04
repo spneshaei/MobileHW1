@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         first.setPercentChange1H(2);
         first.setPercentChange24H(-3);
         first.setPercentChange7D(0);
+        first.setSymbol("BTC");
         ArrayList<Crypto> sampleList = new ArrayList<>();
         sampleList.add(first);
 
