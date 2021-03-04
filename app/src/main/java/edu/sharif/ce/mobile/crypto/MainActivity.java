@@ -12,12 +12,18 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import edu.sharif.ce.mobile.crypto.models.Crypto;
+import edu.sharif.ce.mobile.crypto.notifhandling.NotificationCenter;
+import edu.sharif.ce.mobile.crypto.notifhandling.NotificationID;
 import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
 import edu.sharif.ce.mobile.crypto.utils.NetworkInterface;
 
 public class MainActivity extends AppCompatActivity {
 
+    RecyclerView cryptoList;
+    CryptoAdapter adapter;
+
     private final WeakHandler handler = new WeakHandler(this);
+
     private static class WeakHandler extends Handler implements Subscriber {
         private final WeakReference<MainActivity> activity;
 
@@ -28,11 +34,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             MainActivity activity = this.activity.get();
-            if (activity != null) {
-                switch (msg.what) {
-                    default:
-                        break;
-                }
+            if (activity != null && msg.what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI
+                    && activity.cryptoList != null && activity.adapter != null) {
+                activity.adapter.notifyDataSetChanged();
             }
         }
     }
@@ -41,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
+
 //        Crypto crypto = new Crypto("1","Bitcoin");
 //        crypto.setSymbol("BTC");
 //        NetworkInterface.getCandles(crypto,7);
@@ -56,8 +63,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Crypto> sampleList = new ArrayList<>();
         sampleList.add(first);
 
-        RecyclerView cryptoList = findViewById(R.id.crypto_list);
-        CryptoAdapter adapter = new CryptoAdapter(sampleList);
+        cryptoList = findViewById(R.id.crypto_list);
+
+        adapter = new CryptoAdapter(sampleList);
         cryptoList.setAdapter(adapter);
         cryptoList.setLayoutManager(new LinearLayoutManager(this));
     }
