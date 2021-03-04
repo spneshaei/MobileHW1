@@ -1,6 +1,7 @@
 package edu.sharif.ce.mobile.crypto.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -8,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -28,6 +30,7 @@ import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
 public class Rester implements Subscriber {
     private static final Rester ourInstance = new Rester();
     private ThreadPoolExecutor executor;
+    private Context context;
     static Rester getInstance() {
         return ourInstance;
     }
@@ -37,6 +40,7 @@ public class Rester implements Subscriber {
     }
 
     public void getCryptoData(Context context) {
+        this.context = context;
         try {
             String data = readFromFile(context, "crypto.txt");
             if (!data.equals("")) {
@@ -73,7 +77,7 @@ public class Rester implements Subscriber {
     }
 
     private String readFromFile(Context context, String file) throws Exception {
-        InputStream inputStream = context.openFileInput("config.txt");
+        InputStream inputStream = context.openFileInput(file);
         if (inputStream == null) return "";
         String ret = "";
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -88,13 +92,23 @@ public class Rester implements Subscriber {
         return ret;
     }
 
+    private void writeToFile(String file, Context context, String data) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(file, Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            Log.e("WriteToFile-Rester", "File write failed: " + e.toString());
+        }
+    }
+
     @Override
     public boolean sendEmptyMessage(int what) {
 
         if (what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER) {
-            // Set some global arraylist
-
+            writeToFile("crypto.txt", this.context, new Gson().toJson(Crypto.getCryptos()));
         }
+        NotificationCenter.notify(NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
 
         return false;
     }
