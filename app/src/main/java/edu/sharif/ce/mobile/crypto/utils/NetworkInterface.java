@@ -131,7 +131,7 @@ public class NetworkInterface {
 
         String miniUrl = "period_id=1DAY".concat("&limit=").concat(String.valueOf(range));
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://rest.coinapi.io/v1/ohlcv/".concat(crypto.getSymbol()).concat("/USD/ latest?".concat(miniUrl)))
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://rest.coinapi.io/v1/ohlcv/".concat(crypto.getSymbol()).concat("/USD/latest?".concat(miniUrl)))
                 .newBuilder();
 
         String url = urlBuilder.build().toString();
