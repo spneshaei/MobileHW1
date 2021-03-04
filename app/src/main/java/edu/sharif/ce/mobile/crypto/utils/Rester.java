@@ -19,12 +19,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import edu.sharif.ce.mobile.crypto.models.Crypto;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationCenter;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationID;
+import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
 
 /**
  * Created by Seyyed Parsa Neshaei on 2/28/21
  * All Rights Reserved
  */
-public class Rester {
+public class Rester implements Subscriber {
     private static final Rester ourInstance = new Rester();
     private ThreadPoolExecutor executor;
     static Rester getInstance() {
@@ -49,7 +50,8 @@ public class Rester {
             NotificationCenter.notify(NotificationID.Crypto.NO_INTERNET_CONNECTION);
             return;
         }
-//        NetworkInterface.getCryptoData();
+        NotificationCenter.registerForNotification(this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
+        NetworkInterface.getCryptoData(0, 10);
     }
 
     private boolean isConnected() {
@@ -84,5 +86,16 @@ public class Rester {
         inputStream.close();
         ret = stringBuilder.toString();
         return ret;
+    }
+
+    @Override
+    public boolean sendEmptyMessage(int what) {
+
+        if (what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER) {
+            // Set some global arraylist
+
+        }
+
+        return false;
     }
 }

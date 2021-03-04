@@ -19,14 +19,15 @@ import java.util.Objects;
 
 import edu.sharif.ce.mobile.crypto.models.Candle;
 import edu.sharif.ce.mobile.crypto.models.Crypto;
+import edu.sharif.ce.mobile.crypto.notifhandling.NotificationCenter;
+import edu.sharif.ce.mobile.crypto.notifhandling.NotificationID;
 
 
 public class NetworkInterface {
     private final static String API_KEY_FOR_COIN_MARKET_CAP = "ae590806-c68e-46c5-8577-e5640c7d4b41";
     private final static String API_KEY_FOR_COIN_API = "B7F93831-CA70-46CC-A721-E73AD6ED0282";
-    public static ArrayList<Crypto> cryptoArrayList;
 
-    public static void getCryptoData(int start, int limit) {
+    public static void getCryptoData(final int start, int limit) {
         OkHttpClient okHttpClient = new OkHttpClient();
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit="
@@ -68,8 +69,7 @@ public class NetworkInterface {
                             crypto.setPercentChange7D(inner_obj.getDouble("percent_change_7d"));
                             cryptoArrayList.add(crypto);
                         }
-                        NetworkInterface.cryptoArrayList = cryptoArrayList;
-                        NetworkInterface.getCryptoImageUrls(cryptoArrayList);
+                        NetworkInterface.getCryptoImageUrls(start, cryptoArrayList);
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
                     }
@@ -80,7 +80,7 @@ public class NetworkInterface {
     }
 
 
-    public static void getCryptoImageUrls(ArrayList<Crypto> cryptoArrayList) {
+    public static void getCryptoImageUrls(final int start, final ArrayList<Crypto> cryptoArrayList) {
         StringBuilder sb = new StringBuilder();
         for (Crypto crypto : cryptoArrayList) {
             sb.append(crypto.getId()).append(",");
@@ -111,12 +111,18 @@ public class NetworkInterface {
                     String body = response.body().string();
                     Log.d("response", body);
                     try {
-                        ArrayList<Crypto> cryptoArrayList = NetworkInterface.cryptoArrayList;
                         JSONObject data = new JSONObject(body).getJSONObject("data");
                         for (Crypto crypto : cryptoArrayList) {
                             JSONObject object = data.getJSONObject(crypto.getId());
                             crypto.setImageUrl(object.getString("logo"));
                         }
+                        // load in static here...
+                        if (start >= Crypto.getCryptos().size()) {
+                            Crypto.addAllCryptos(cryptoArrayList);
+                        } else {
+//                            NetworkInterface.cryptoArrayList.replaceAll();
+                        }
+                        NotificationCenter.notify(NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
                     }

@@ -11,24 +11,26 @@ import java.util.Objects;
  * All Rights Reserved
  */
 public class NotificationCenter {
-    private static HashMap<Integer, ArrayList<Handler>> subscribers = new HashMap<>();
+    private static HashMap<Integer, ArrayList<Subscriber>> subscribers = new HashMap<>();
 
-    public static void registerForNotification(Handler handler, int id) {
+    public static void registerForNotification(Subscriber subscriber, int id) {
         if (!subscribers.containsKey(id) || subscribers.get(id) == null) {
-            ArrayList<Handler> newList = new ArrayList<>();
-            newList.add(handler);
+            ArrayList<Subscriber> newList = new ArrayList<>();
+            newList.add(subscriber);
             subscribers.put(id, newList);
             return;
         }
-        Objects.requireNonNull(subscribers.get(id)).add(handler);
+        if (!Objects.requireNonNull(subscribers.get(id)).contains(subscriber)) {
+            Objects.requireNonNull(subscribers.get(id)).add(subscriber);
+        }
     }
 
     public static void notify(int id) {
         if (!subscribers.containsKey(id)) return;
-        ArrayList<Handler> arrayList = subscribers.get(id);
+        ArrayList<Subscriber> arrayList = subscribers.get(id);
         if (arrayList == null) return;
-        for (Handler handler : arrayList) {
-            handler.sendEmptyMessage(id);
+        for (Subscriber subscriber : arrayList) {
+            subscriber.sendEmptyMessage(id);
         }
     }
 }

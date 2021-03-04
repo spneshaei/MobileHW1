@@ -1,10 +1,11 @@
 package edu.sharif.ce.mobile.crypto.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Crypto {
-    private static ArrayList<Crypto> cryptos;
+    private static ArrayList<Crypto> cryptos = new ArrayList<>();
 
     private String id;
     private double price;
@@ -123,6 +124,10 @@ public class Crypto {
 
     public static void addCrypto(Crypto crypto) {
         cryptos.add(crypto);
+    }
+
+    public static void addAllCryptos(ArrayList<Crypto> newCryptos) {
+        cryptos.addAll(newCryptos);
     }
 
     public static void setCryptos(ArrayList<Crypto> newCryptos) {
