@@ -46,7 +46,7 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Crypto thisCrypto = mCryptos.get(position);
         Glide.with(context).load(thisCrypto.getImageUrl()).into(holder.image);
-        holder.name.setText(" " + thisCrypto.getName());
+        holder.name.setText(thisCrypto.getName());
         holder.symbol.setText(thisCrypto.getSymbol() + " |");
         holder.price.setText("$" + thisCrypto.getPrice());
         holder.oneHour.setText("1H: " + thisCrypto.getPercentChange1H() + "%");
