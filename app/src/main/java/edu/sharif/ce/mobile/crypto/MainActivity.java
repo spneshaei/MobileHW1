@@ -60,8 +60,18 @@ public class MainActivity extends AppCompatActivity {
         first.setPercentChange24H(-3);
         first.setPercentChange7D(0);
         first.setSymbol("BTC");
+
+        Crypto second = new Crypto("2", "Etherium");
+        second.setPrice(2000);
+        second.setImageUrl("https://s2.coinmarketcap.com/static/img/coins/64x64/2.png");
+        second.setPercentChange1H(-2);
+        second.setPercentChange24H(3);
+        second.setPercentChange7D(-4);
+        second.setSymbol("ETH");
+
         ArrayList<Crypto> sampleList = new ArrayList<>();
         sampleList.add(first);
+        sampleList.add(second);
 
         cryptoList = findViewById(R.id.crypto_list);
 

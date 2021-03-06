@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="borderColor">#242A50</color>
+    <color name="topicColor">#122147</color>
+    <color name="mainBackground">#f5fdff</color>
+    <color name="crypto_backgrounds">#f0fdff</color>
 </resources>

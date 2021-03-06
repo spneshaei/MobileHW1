@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Crypto</string>
     <string name="crypto_image">Crypto Image</string>
+    <string name="main_page_title">Watchlist</string>
 </resources>
