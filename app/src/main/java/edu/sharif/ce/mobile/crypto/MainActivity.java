@@ -7,6 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.github.ybq.android.spinkit.SpinKitView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -78,5 +84,16 @@ public class MainActivity extends AppCompatActivity {
         adapter = new CryptoAdapter(sampleList);
         cryptoList.setAdapter(adapter);
         cryptoList.setLayoutManager(new LinearLayoutManager(this));
+
+        finish_load();
+
+    }
+
+    public void finish_load() {
+        SpinKitView spinKit = findViewById(R.id.spin_kit);
+        spinKit.setVisibility(View.INVISIBLE);
+        TextView watchlist = findViewById(R.id.watchlist);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        watchlist.setLayoutParams(params);
     }
 }
