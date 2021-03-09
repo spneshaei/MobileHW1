@@ -87,6 +87,7 @@ public class NetworkInterface {
         for (Crypto crypto : cryptoArrayList) {
             sb.append(crypto.getId()).append(",");
         }
+        if (sb.toString().equals("")) return;
         String query_params = sb.deleteCharAt(sb.length() - 1).toString();
         HttpUrl.Builder urlBuilder = HttpUrl.parse("https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?id="
                 .concat(query_params))
