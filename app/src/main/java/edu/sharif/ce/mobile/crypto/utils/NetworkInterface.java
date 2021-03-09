@@ -68,6 +68,7 @@ public class NetworkInterface {
                             crypto.setPercentChange24H(inner_obj.getDouble("percent_change_24h"));
                             crypto.setPercentChange7D(inner_obj.getDouble("percent_change_7d"));
                             cryptoArrayList.add(crypto);
+                            Crypto.addCrypto(crypto);
                         }
                         NetworkInterface.getCryptoImageUrls(start, cryptoArrayList);
                     } catch (JSONException e) {
@@ -168,7 +169,7 @@ public class NetworkInterface {
                             double low = object.getDouble("price_low");
                             double close = object.getDouble("price_close");
                             double open = object.getDouble("price_open");
-                            candleArrayList.add(new Candle(crypto.getId(), high, low, close, open));
+                            candleArrayList.add(new Candle(crypto.getId(), high, low, close, open, range - i));
                         }
                         if (range == 30) {
                             crypto.setLastMonthCandles(candleArrayList);

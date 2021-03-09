@@ -31,7 +31,7 @@ public class Rester implements Subscriber {
     private static final Rester ourInstance = new Rester();
     private ThreadPoolExecutor executor;
     private Context context;
-    static Rester getInstance() {
+    public static Rester getInstance() {
         return ourInstance;
     }
 
@@ -50,12 +50,12 @@ public class Rester implements Subscriber {
             }
         } catch (Exception ignored) {
         }
-        if (!isConnected()) {
-            NotificationCenter.notify(NotificationID.Crypto.NO_INTERNET_CONNECTION);
-            return;
-        }
+//        if (!isConnected()) {
+//            NotificationCenter.notify(NotificationID.Crypto.NO_INTERNET_CONNECTION);
+//            return;
+//        }
         NotificationCenter.registerForNotification(this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
-        NetworkInterface.getCryptoData(0, 10);
+        NetworkInterface.getCryptoData(1, 10);
     }
 
     private boolean isConnected() {

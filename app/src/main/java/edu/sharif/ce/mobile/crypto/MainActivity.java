@@ -22,6 +22,7 @@ import edu.sharif.ce.mobile.crypto.notifhandling.NotificationCenter;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationID;
 import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
 import edu.sharif.ce.mobile.crypto.utils.NetworkInterface;
+import edu.sharif.ce.mobile.crypto.utils.Rester;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,35 +54,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
-
-//        Crypto crypto = new Crypto("1","Bitcoin");
-//        crypto.setSymbol("BTC");
-//        NetworkInterface.getCandles(crypto,7);
+        Rester.getInstance().getCryptoData(this);
 
         //just for test
-        Crypto first = new Crypto("1", "Bitcoin");
-        first.setPrice(1000);
-        first.setImageUrl("https://miro.medium.com/max/410/1*U7phpu7aKKrU05JvMvs-wA.png");
-        first.setPercentChange1H(2);
-        first.setPercentChange24H(-3);
-        first.setPercentChange7D(0);
-        first.setSymbol("BTC");
-
-        Crypto second = new Crypto("2", "Etherium");
-        second.setPrice(2000);
-        second.setImageUrl("https://s2.coinmarketcap.com/static/img/coins/64x64/2.png");
-        second.setPercentChange1H(-2);
-        second.setPercentChange24H(3);
-        second.setPercentChange7D(-4);
-        second.setSymbol("ETH");
-
-        ArrayList<Crypto> sampleList = new ArrayList<>();
-        sampleList.add(first);
-        sampleList.add(second);
+//        Crypto first = new Crypto("1", "Bitcoin");
+//        first.setPrice(1000);
+//        first.setImageUrl("https://miro.medium.com/max/410/1*U7phpu7aKKrU05JvMvs-wA.png");
+//        first.setPercentChange1H(2);
+//        first.setPercentChange24H(-3);
+//        first.setPercentChange7D(0);
+//        first.setSymbol("BTC");
+//
+//        Crypto second = new Crypto("2", "Etherium");
+//        second.setPrice(2000);
+//        second.setImageUrl("https://s2.coinmarketcap.com/static/img/coins/64x64/2.png");
+//        second.setPercentChange1H(-2);
+//        second.setPercentChange24H(3);
+//        second.setPercentChange7D(-4);
+//        second.setSymbol("ETH");
+//
+//        ArrayList<Crypto> sampleList = new ArrayList<>();
+//        sampleList.add(first);
+//        sampleList.add(second);
 
         cryptoList = findViewById(R.id.crypto_list);
 
-        adapter = new CryptoAdapter(sampleList);
+        adapter = new CryptoAdapter(Crypto.getCryptos());
         cryptoList.setAdapter(adapter);
         cryptoList.setLayoutManager(new LinearLayoutManager(this));
 
