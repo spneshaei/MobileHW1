@@ -9,34 +9,49 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 
+import edu.sharif.ce.mobile.crypto.models.Crypto;
+
 public class CandleInfoActivity extends AppCompatActivity {
 
     ViewPager2 mPager;
     ChartAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_candle_info);
         mPager = findViewById(R.id.view_pager);
-        adapter = new ChartAdapter(this);
+        adapter = new ChartAdapter(this, (Crypto) getIntent().getExtras().get("crypto"));
         mPager.setAdapter(adapter);
     }
 
     static class ChartAdapter extends FragmentStateAdapter {
+        Crypto crypto;
 
-        public ChartAdapter(@NonNull FragmentActivity fragmentActivity) {
+        public ChartAdapter(@NonNull FragmentActivity fragmentActivity, Crypto crypto) {
             super(fragmentActivity);
+            this.crypto = crypto;
         }
 
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            return null;
+            int type;
+            switch (position) {
+                default:
+                case 0:
+                    type = ChartFragment.TYPE_ONE_WEEK;
+                    break;
+                case 1:
+                    type = ChartFragment.TYPE_ONE_MONTH;
+                    break;
+            }
+            return new ChartFragment(crypto, type);
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return 3;
         }
     }
 }

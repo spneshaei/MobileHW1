@@ -1,10 +1,13 @@
 package edu.sharif.ce.mobile.crypto.models;
 
+import com.github.mikephil.charting.data.CandleEntry;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class Crypto {
+public class Crypto implements Serializable {
     private static ArrayList<Crypto> cryptos = new ArrayList<>();
 
     private String id;
@@ -15,8 +18,8 @@ public class Crypto {
     private double percentChange1H;
     private double percentChange24H;
     private double percentChange7D;
-    private ArrayList<Candle> lastWeekCandles;
-    private ArrayList<Candle> lastMonthCandles;
+    private ArrayList<CandleEntry> lastWeekCandles;
+    private ArrayList<CandleEntry> lastMonthCandles;
 
 
     public Crypto(String id, String name) {
@@ -30,11 +33,11 @@ public class Crypto {
         return id;
     }
 
-    public void setLastWeekCandles(ArrayList<Candle> lastWeekCandles) {
+    public void setLastWeekCandles(ArrayList<CandleEntry> lastWeekCandles) {
         this.lastWeekCandles = lastWeekCandles;
     }
 
-    public void setLastMonthCandles(ArrayList<Candle> lastMonthCandles) {
+    public void setLastMonthCandles(ArrayList<CandleEntry> lastMonthCandles) {
         this.lastMonthCandles = lastMonthCandles;
     }
 
@@ -106,11 +109,11 @@ public class Crypto {
         this.percentChange7D = percentChange7D;
     }
 
-    public ArrayList<Candle> getLastWeekCandles() {
+    public ArrayList<CandleEntry> getLastWeekCandles() {
         return lastWeekCandles;
     }
 
-    public ArrayList<Candle> getLastMonthCandles() {
+    public ArrayList<CandleEntry> getLastMonthCandles() {
         return lastMonthCandles;
     }
 

@@ -2,6 +2,7 @@ package edu.sharif.ce.mobile.crypto.utils;
 
 import android.util.Log;
 
+import com.github.mikephil.charting.data.CandleEntry;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
@@ -161,7 +162,7 @@ public class NetworkInterface {
                     String body = response.body().string();
                     Log.d("response", body);
                     try {
-                        ArrayList<Candle> candleArrayList = new ArrayList<>();
+                        ArrayList<CandleEntry> candleArrayList = new ArrayList<>();
                         JSONArray data_array = new JSONArray(body);
                         for (int i = 0; i < range; i++) {
                             JSONObject object = (JSONObject) data_array.get(i);

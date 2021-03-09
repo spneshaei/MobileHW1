@@ -1,6 +1,7 @@
 package edu.sharif.ce.mobile.crypto;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -50,6 +51,15 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         holder.symbol.setText(thisCrypto.getSymbol() + " |");
         holder.price.setText("$" + thisCrypto.getPrice());
         holder.oneHour.setText("1H: " + thisCrypto.getPercentChange1H() + "%");
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = ((CryptoAdapter.ViewHolder) view.getTag()).getAdapterPosition();
+                Intent intent = new Intent(context, CandleInfoActivity.class);
+                intent.putExtra("crypto", mCryptos.get(position));
+                context.startActivity(intent);
+            }
+        });
 
         int green = Color.parseColor("#3EA623");
         int red = Color.parseColor("#B72C28");
@@ -99,6 +109,7 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
             oneDay = itemView.findViewById(R.id.price_one_day);
             oneWeek = itemView.findViewById(R.id.price_one_week);
             symbol = itemView.findViewById(R.id.crypto_symbol);
+            itemView.setTag(this);
         }
     }
 }
