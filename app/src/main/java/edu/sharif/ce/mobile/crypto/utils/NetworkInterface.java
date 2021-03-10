@@ -171,13 +171,14 @@ public class NetworkInterface {
                             double low = object.getDouble("price_low");
                             double close = object.getDouble("price_close");
                             double open = object.getDouble("price_open");
-                            candleArrayList.add(new Candle(crypto.getId(), high, low, close, open, range - i));
+                            candleArrayList.add(new Candle(crypto.getId(), high, low, close, open, i));
                         }
                         if (range == 30) {
                             crypto.setLastMonthCandles(candleArrayList);
                         } else if (range == 7) {
                             crypto.setLastWeekCandles(candleArrayList);
                         }
+                        NotificationCenter.notify(NotificationID.Candle.CANDLES_LOADED);
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
                     }

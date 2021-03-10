@@ -11,4 +11,8 @@ public class NotificationID {
         public static int NEW_DATA_LOADED_FOR_RESTER = 3;
         public static int NEW_DATA_LOADED_FOR_UI = 4;
     }
+
+    public static class Candle {
+        public static int CANDLES_LOADED = 5;
+    }
 }

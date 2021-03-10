@@ -51,7 +51,7 @@ public class CandleInfoActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 3;
+            return 2;
         }
     }
 }
