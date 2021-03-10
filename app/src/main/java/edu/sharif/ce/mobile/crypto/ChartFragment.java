@@ -1,5 +1,6 @@
 package edu.sharif.ce.mobile.crypto;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -40,18 +41,25 @@ public class ChartFragment extends Fragment {
 
     private static class WeakHandler extends Handler implements Subscriber {
         private final WeakReference<ChartFragment> fragment;
+        private WeakReference<Context> context;
 
-        public WeakHandler(ChartFragment fragment) {
+        public WeakHandler(ChartFragment fragment, Context context) {
             this.fragment = new WeakReference<>(fragment);
+            this.context = new WeakReference<>(context);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            if (fragment != null && msg.what == NotificationID.Candle.CANDLES_LOADED) {
-                fragment.get().progressBar.setVisibility(View.GONE);
+            ChartFragment unwrappedFragment = fragment.get();
+            Context unwrappedContext = context.get();
+            if (unwrappedFragment == null || unwrappedContext == null) return;
+            if (msg.what == NotificationID.Candle.CANDLES_LOADED) {
+                Rester.getInstance().saveCandle(unwrappedContext, unwrappedFragment.crypto,
+                        unwrappedFragment.getRangeFromType(unwrappedFragment.type));
+                unwrappedFragment.progressBar.setVisibility(View.GONE);
                 try {
-                    fragment.get().provideData();
-                }catch (Exception e) {
+                    unwrappedFragment.provideData();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -59,7 +67,6 @@ public class ChartFragment extends Fragment {
     }
 
 
-    private ArrayList<Candle> candleData;
     private int type;
     private Crypto crypto;
 
@@ -75,12 +82,16 @@ public class ChartFragment extends Fragment {
         this.crypto = crypto;
     }
 
+    public int getRangeFromType(int type) {
+        return type == TYPE_ONE_MONTH ? 30 : 7;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHandler = new WeakHandler(this);
+        mHandler = new WeakHandler(this, getContext());
         NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.CANDLES_LOADED);
-        Rester.getInstance().getCandleData(getContext(), crypto, type == TYPE_ONE_MONTH ? 30 : 7);
+        Rester.getInstance().getCandleData(getContext(), crypto, getRangeFromType(type));
     }
 
     @Override
@@ -116,8 +127,8 @@ public class ChartFragment extends Fragment {
         Legend l = chart.getLegend();
         l.setEnabled(true);
 
-        ArrayList<CandleEntry> yValsCandleStick = type == TYPE_ONE_WEEK?
-                crypto.getLastWeekCandles():crypto.getLastMonthCandles();
+        ArrayList<CandleEntry> yValsCandleStick = type == TYPE_ONE_WEEK ?
+                crypto.getLastWeekCandles() : crypto.getLastMonthCandles();
         CandleDataSet set1 = new CandleDataSet(yValsCandleStick, "Candles");
         set1.setColor(Color.rgb(80, 80, 80));
         set1.setShadowColor(getResources().getColor(R.color.colorGray));

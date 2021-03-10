@@ -157,6 +157,8 @@ public class NetworkInterface {
                 Log.e("network", Objects.requireNonNull(e.getMessage()));
             }
 
+            // TODO: In case of error message in body??
+
             @Override
             public void onResponse(Response response) throws IOException {
                 if (!response.isSuccessful()) {
@@ -175,6 +177,7 @@ public class NetworkInterface {
                             double open = object.getDouble("price_open");
                             candleArrayList.add(new Candle(crypto.getId(), high, low, close, open, range - i));
                         }
+                        crypto.setCandleData(body);
                         if (range == 30) {
                             crypto.setLastMonthCandles(candleArrayList);
                         } else if (range == 7) {

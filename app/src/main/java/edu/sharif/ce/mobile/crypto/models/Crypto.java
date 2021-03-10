@@ -19,12 +19,21 @@ public class Crypto implements Serializable {
     private double percentChange1H;
     private double percentChange24H;
     private double percentChange7D;
+    private String candleData;
     private ArrayList<CandleEntry> lastWeekCandles;
     private ArrayList<CandleEntry> lastMonthCandles;
 
     public static Crypto getCryptoWithID(String id) {
         for (Crypto crypto : cryptos) if (crypto.id.equals(id)) return crypto;
         return null;
+    }
+
+    public String getCandleData() {
+        return candleData;
+    }
+
+    public void setCandleData(String candleData) {
+        this.candleData = candleData;
     }
 
     public Crypto(String id, String name) {
@@ -44,14 +53,6 @@ public class Crypto implements Serializable {
 
     public void setLastMonthCandles(ArrayList<CandleEntry> lastMonthCandles) {
         this.lastMonthCandles = lastMonthCandles;
-    }
-
-    public void addCandleToLastWeekCandles(Candle candle) {
-        this.lastWeekCandles.add(candle);
-    }
-
-    public void addCandleToLastMonthCandles(Candle candle) {
-        this.lastMonthCandles.add(candle);
     }
 
     public void setId(String id) {
@@ -123,19 +124,11 @@ public class Crypto implements Serializable {
     }
 
     public static ArrayList<Crypto> getCryptos() {
-        return cryptos; //new ArrayList<>(Collections.unmodifiableList(cryptos));
+        return cryptos;
     }
 
     private static void clearCryptos() {
         cryptos.clear();
-    }
-
-    public static void addCrypto(Crypto crypto) {
-        cryptos.add(crypto);
-    }
-
-    public static void addAllCryptos(ArrayList<Crypto> newCryptos) {
-        cryptos.addAll(newCryptos);
     }
 
     public static void addAllCryptosIfNotRepeated(ArrayList<Crypto> newCryptos) {
@@ -160,6 +153,7 @@ public class Crypto implements Serializable {
         oldCrypto.percentChange24H = newCrypto.percentChange24H;
         oldCrypto.price = newCrypto.price;
         oldCrypto.symbol = newCrypto.symbol;
+        oldCrypto.candleData = newCrypto.candleData;
     }
 
 

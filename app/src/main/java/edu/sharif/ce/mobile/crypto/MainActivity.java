@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     public void finish_load() {
+        Rester.getInstance().saveCryptos(this);
         SpinKitView spinKit = findViewById(R.id.spin_kit);
         spinKit.setVisibility(View.INVISIBLE);
         TextView watchlist = findViewById(R.id.watchlist);

@@ -102,6 +102,7 @@ public class Rester implements Subscriber {
                 double open = object.getDouble("price_open");
                 candleArrayList.add(new Candle(crypto.getId(), high, low, close, open, range - i));
             }
+            crypto.setCandleData(data);
             if (range == 30) {
                 crypto.setLastMonthCandles(candleArrayList);
             } else if (range == 7) {
@@ -150,6 +151,24 @@ public class Rester implements Subscriber {
         inputStream.close();
         ret = stringBuilder.toString();
         return ret;
+    }
+
+    public void saveCryptos(final Context context) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                writeToFile("crypto.txt", context, new Gson().toJson(Crypto.getCryptos()));
+            }
+        });
+    }
+
+    public void saveCandle(final Context context, final Crypto crypto, final int range) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                writeToFile("candle-" + crypto.getId() +"-" + range +".txt", context, crypto.getCandleData());
+            }
+        });
     }
 
     private void writeToFile(String file, Context context, String data) {
