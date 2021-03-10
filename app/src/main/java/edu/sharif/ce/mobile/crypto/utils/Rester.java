@@ -38,22 +38,27 @@ public class Rester implements Subscriber {
         executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
     }
 
-    public void getCryptoData(Context context) {
-        try {
-            String data = readFromFile(context, "crypto.txt");
-            if (!data.equals("")) {
-                // data is in the cache
-                setCryptosFromJSON(data);
-                NotificationCenter.notify(NotificationID.Crypto.DATA_LOADED_FROM_CACHE);
+    public void getCryptoData(final Context context) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String data = readFromFile(context, "crypto.txt");
+                    if (!data.equals("")) {
+                        // data is in the cache
+                        setCryptosFromJSON(data);
+                        NotificationCenter.notify(NotificationID.Crypto.DATA_LOADED_FROM_CACHE);
+                    }
+                } catch (Exception ignored) {
+                }
+                if (!isConnected()) {
+                    NotificationCenter.notify(NotificationID.Crypto.NO_INTERNET_CONNECTION);
+                    return;
+                }
+                NotificationCenter.registerForNotification(Rester.this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
+                NetworkInterface.getCryptoData(1, 10);
             }
-        } catch (Exception ignored) {
-        }
-//        if (!isConnected()) {
-//            NotificationCenter.notify(NotificationID.Crypto.NO_INTERNET_CONNECTION);
-//            return;
-//        }
-        NotificationCenter.registerForNotification(this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
-        NetworkInterface.getCryptoData(1, 10);
+        });
     }
 
     private boolean isConnected() {
