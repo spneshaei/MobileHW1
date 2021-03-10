@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 
 public class Crypto implements Serializable {
     private static ArrayList<Crypto> cryptos = new ArrayList<>();
@@ -21,6 +22,10 @@ public class Crypto implements Serializable {
     private ArrayList<CandleEntry> lastWeekCandles;
     private ArrayList<CandleEntry> lastMonthCandles;
 
+    public static Crypto getCryptoWithID(String id) {
+        for (Crypto crypto : cryptos) if (crypto.id.equals(id)) return crypto;
+        return null;
+    }
 
     public Crypto(String id, String name) {
         this.id = id;
@@ -132,6 +137,31 @@ public class Crypto implements Serializable {
     public static void addAllCryptos(ArrayList<Crypto> newCryptos) {
         cryptos.addAll(newCryptos);
     }
+
+    public static void addAllCryptosIfNotRepeated(ArrayList<Crypto> newCryptos) {
+        for (Crypto newCrypto : newCryptos) {
+            Crypto oldCrypto = getCryptoWithID(newCrypto.id);
+            if (oldCrypto != null) {
+                copyCryptoDetails(newCrypto, oldCrypto);
+                continue;
+            }
+            cryptos.add(newCrypto);
+        }
+    }
+
+    private static void copyCryptoDetails(Crypto newCrypto, Crypto oldCrypto) {
+        oldCrypto.id = newCrypto.id;
+        oldCrypto.imageUrl = newCrypto.imageUrl;
+        oldCrypto.lastMonthCandles = newCrypto.lastMonthCandles;
+        oldCrypto.lastWeekCandles = newCrypto.lastWeekCandles;
+        oldCrypto.name = newCrypto.name;
+        oldCrypto.percentChange1H = newCrypto.percentChange1H;
+        oldCrypto.percentChange7D = newCrypto.percentChange7D;
+        oldCrypto.percentChange24H = newCrypto.percentChange24H;
+        oldCrypto.price = newCrypto.price;
+        oldCrypto.symbol = newCrypto.symbol;
+    }
+
 
     public static void setCryptos(ArrayList<Crypto> newCryptos) {
         clearCryptos();

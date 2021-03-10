@@ -72,7 +72,6 @@ public class NetworkInterface {
                             crypto.setPercentChange24H(inner_obj.getDouble("percent_change_24h"));
                             crypto.setPercentChange7D(inner_obj.getDouble("percent_change_7d"));
                             cryptoArrayList.add(crypto);
-                            Crypto.addCrypto(crypto);
                         }
                         NetworkInterface.getCryptoImageUrls(start, cryptoArrayList);
                     } catch (JSONException e) {
@@ -123,11 +122,11 @@ public class NetworkInterface {
                             crypto.setImageUrl(object.getString("logo"));
                         }
                         // load in static here...
-                        if (start >= Crypto.getCryptos().size()) {
-                            Crypto.addAllCryptos(cryptoArrayList);
-                        } else {
-//                            NetworkInterface.cryptoArrayList.replaceAll();
-                        }
+//                        if (start >= Crypto.getCryptos().size()) {
+                            Crypto.addAllCryptosIfNotRepeated(cryptoArrayList);
+//                        } else {
+////                            NetworkInterface.cryptoArrayList.replaceAll();
+//                        }
                         NotificationCenter.notify(NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
