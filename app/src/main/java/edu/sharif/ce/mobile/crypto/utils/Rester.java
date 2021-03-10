@@ -38,7 +38,7 @@ public class Rester implements Subscriber {
         executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
     }
 
-    public void getCryptoData(final Context context, int start, int limit) {
+    public void getCryptoData(final Context context, final int start, final int limit) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -56,7 +56,7 @@ public class Rester implements Subscriber {
                     return;
                 }
                 NotificationCenter.registerForNotification(Rester.this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
-                NetworkInterface.getCryptoData(1, 10);
+                NetworkInterface.getCryptoData(start, limit);
             }
         });
     }
