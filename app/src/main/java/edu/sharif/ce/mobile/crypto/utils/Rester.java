@@ -60,6 +60,29 @@ public class Rester implements Subscriber {
             }
         });
     }
+//
+//    public void getCandleData(final Context context, final Crypto crypto, final int range) {
+//        executor.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    String data = readFromFile(context, "candle-" + crypto.getId() +".txt");
+//                    if (!data.equals("")) {
+//                        // data is in the cache
+//                        setCandlesFromJSON(data);
+//                        NotificationCenter.notify(NotificationID.Candle.DATA_LOADED_FROM_CACHE);
+//                    }
+//                } catch (Exception ignored) {
+//                }
+//                if (!isConnected()) {
+//                    NotificationCenter.notify(NotificationID.Candle.NO_INTERNET_CONNECTION);
+//                    return;
+//                }
+//                NotificationCenter.registerForNotification(Rester.this, NotificationID.Candle.NEW_DATA_LOADED_FOR_RESTER);
+//                NetworkInterface.getCandles(crypto, range);
+//            }
+//        });
+//    }
 
     private boolean isConnected() {
         try {

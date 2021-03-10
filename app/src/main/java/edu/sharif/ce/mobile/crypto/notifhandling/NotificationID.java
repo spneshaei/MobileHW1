@@ -14,5 +14,9 @@ public class NotificationID {
 
     public static class Candle {
         public static int CANDLES_LOADED = 5;
+        public static int DATA_LOADED_FROM_CACHE = 6;
+        public static int NO_INTERNET_CONNECTION = 7;
+        public static int NEW_DATA_LOADED_FOR_RESTER = 8;
+        public static int NEW_DATA_LOADED_FOR_UI = 9;
     }
 }
