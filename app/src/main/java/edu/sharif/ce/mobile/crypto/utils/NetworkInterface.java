@@ -16,6 +16,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 import edu.sharif.ce.mobile.crypto.models.Candle;
@@ -171,13 +174,19 @@ public class NetworkInterface {
                             double low = object.getDouble("price_low");
                             double close = object.getDouble("price_close");
                             double open = object.getDouble("price_open");
-                            candleArrayList.add(new Candle(crypto.getId(), high, low, close, open, i));
+                            candleArrayList.add(new Candle(crypto.getId(), high, low, close, open, range - i));
                         }
                         if (range == 30) {
                             crypto.setLastMonthCandles(candleArrayList);
                         } else if (range == 7) {
                             crypto.setLastWeekCandles(candleArrayList);
                         }
+                        Collections.sort(candleArrayList, new Comparator<CandleEntry>() {
+                            @Override
+                            public int compare(CandleEntry candleEntry, CandleEntry t1) {
+                                return ((int) (candleEntry.getX() - t1.getX()));
+                            }
+                        });
                         NotificationCenter.notify(NotificationID.Candle.CANDLES_LOADED);
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
