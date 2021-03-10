@@ -3,7 +3,6 @@ package edu.sharif.ce.mobile.crypto.utils;
 import android.util.Log;
 
 import com.github.mikephil.charting.data.CandleEntry;
-import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
@@ -16,7 +15,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
@@ -189,7 +187,7 @@ public class NetworkInterface {
                                 return ((int) (candleEntry.getX() - t1.getX()));
                             }
                         });
-                        NotificationCenter.notify(NotificationID.Candle.CANDLES_LOADED);
+                        NotificationCenter.notify(NotificationID.Candle.NEW_DATA_LOADED_FOR_UI);
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
                     }

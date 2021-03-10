@@ -1,13 +1,10 @@
 package edu.sharif.ce.mobile.crypto;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -31,12 +28,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import edu.sharif.ce.mobile.crypto.models.Candle;
 import edu.sharif.ce.mobile.crypto.models.Crypto;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationCenter;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationID;
 import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
-import edu.sharif.ce.mobile.crypto.utils.NetworkInterface;
 import edu.sharif.ce.mobile.crypto.utils.Rester;
 
 
@@ -59,10 +54,12 @@ public class ChartFragment extends Fragment {
             ChartFragment unwrappedFragment = fragment.get();
             Context unwrappedContext = context.get();
             if (unwrappedFragment == null || unwrappedContext == null) return;
-            if (msg.what == NotificationID.Candle.CANDLES_LOADED) {
-                Rester.getInstance().saveCandle(unwrappedContext, unwrappedFragment.crypto,
-                        unwrappedFragment.getRangeFromType(unwrappedFragment.type));
-                unwrappedFragment.progressBar.setVisibility(View.GONE);
+            if (msg.what == NotificationID.Candle.NEW_DATA_LOADED_FOR_UI || msg.what == NotificationID.Candle.DATA_LOADED_FROM_CACHE) {
+                if (msg.what == NotificationID.Candle.NEW_DATA_LOADED_FOR_UI) {
+                    Rester.getInstance().saveCandle(unwrappedContext, unwrappedFragment.crypto,
+                            unwrappedFragment.getRangeFromType(unwrappedFragment.type));
+                    unwrappedFragment.progressBar.setVisibility(View.GONE);
+                }
                 try {
                     unwrappedFragment.provideData();
                 } catch (Exception e) {
@@ -71,6 +68,7 @@ public class ChartFragment extends Fragment {
             } else if (msg.what == NotificationID.Candle.NO_INTERNET_CONNECTION) {
                 FragmentActivity activity = unwrappedFragment.getActivity();
                 if (activity == null) return;
+                unwrappedFragment.progressBar.setVisibility(View.GONE);
                 Snackbar.make(activity.findViewById(android.R.id.content), "No Internet Connection", Snackbar.LENGTH_LONG)
                         .setAction("CLOSE", new View.OnClickListener() {
                             @Override
@@ -108,7 +106,9 @@ public class ChartFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler = new WeakHandler(this, getContext());
-        NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.CANDLES_LOADED);
+        NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.NEW_DATA_LOADED_FOR_UI);
+        NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.DATA_LOADED_FROM_CACHE);
+        NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.NO_INTERNET_CONNECTION);
         Rester.getInstance().getCandleData(getContext(), crypto, getRangeFromType(type));
     }
 
