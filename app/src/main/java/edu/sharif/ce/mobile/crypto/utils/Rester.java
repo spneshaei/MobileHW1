@@ -30,7 +30,6 @@ import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
 public class Rester implements Subscriber {
     private static final Rester ourInstance = new Rester();
     private ThreadPoolExecutor executor;
-    private Context context;
     public static Rester getInstance() {
         return ourInstance;
     }
@@ -39,23 +38,27 @@ public class Rester implements Subscriber {
         executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
     }
 
-    public void getCryptoData(Context context) {
-        this.context = context;
-        try {
-            String data = readFromFile(context, "crypto.txt");
-            if (!data.equals("")) {
-                // data is in the cache
-                setCryptosFromJSON(data);
-                NotificationCenter.notify(NotificationID.Crypto.DATA_LOADED_FROM_CACHE);
+    public void getCryptoData(final Context context) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String data = readFromFile(context, "crypto.txt");
+                    if (!data.equals("")) {
+                        // data is in the cache
+                        setCryptosFromJSON(data);
+                        NotificationCenter.notify(NotificationID.Crypto.DATA_LOADED_FROM_CACHE);
+                    }
+                } catch (Exception ignored) {
+                }
+                if (!isConnected()) {
+                    NotificationCenter.notify(NotificationID.Crypto.NO_INTERNET_CONNECTION);
+                    return;
+                }
+                NotificationCenter.registerForNotification(Rester.this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
+                NetworkInterface.getCryptoData(1, 10);
             }
-        } catch (Exception ignored) {
-        }
-//        if (!isConnected()) {
-//            NotificationCenter.notify(NotificationID.Crypto.NO_INTERNET_CONNECTION);
-//            return;
-//        }
-        NotificationCenter.registerForNotification(this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
-        NetworkInterface.getCryptoData(1, 10);
+        });
     }
 
     private boolean isConnected() {
@@ -105,9 +108,9 @@ public class Rester implements Subscriber {
     @Override
     public boolean sendEmptyMessage(int what) {
 
-        if (what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER) {
-            writeToFile("crypto.txt", this.context, new Gson().toJson(Crypto.getCryptos()));
-        }
+//        if (what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER) {
+//            writeToFile("crypto.txt", MyApplication.getAppContext(), new Gson().toJson(Crypto.getCryptos()));
+//        }
         NotificationCenter.notify(NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
 
         return false;
