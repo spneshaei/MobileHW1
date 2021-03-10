@@ -81,6 +81,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
-        Rester.getInstance().getCryptoData(this, 0, 10);
+        Rester.getInstance().getCryptoData(this, 1, 10);
     }
 }
