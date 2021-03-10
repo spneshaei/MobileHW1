@@ -118,7 +118,7 @@ public class Crypto implements Serializable {
     }
 
     public static ArrayList<Crypto> getCryptos() {
-        return new ArrayList<>(Collections.unmodifiableList(cryptos));
+        return cryptos; //new ArrayList<>(Collections.unmodifiableList(cryptos));
     }
 
     private static void clearCryptos() {

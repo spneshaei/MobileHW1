@@ -55,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        cryptoList = findViewById(R.id.crypto_list);
+
+        adapter = new CryptoAdapter(Crypto.getCryptos());
+        cryptoList.setAdapter(adapter);
+        cryptoList.setLayoutManager(new LinearLayoutManager(this));
+
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
         Rester.getInstance().getCryptoData(this);
 
@@ -79,11 +85,7 @@ public class MainActivity extends AppCompatActivity {
 //        sampleList.add(first);
 //        sampleList.add(second);
 
-        cryptoList = findViewById(R.id.crypto_list);
 
-        adapter = new CryptoAdapter(Crypto.getCryptos());
-        cryptoList.setAdapter(adapter);
-        cryptoList.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
