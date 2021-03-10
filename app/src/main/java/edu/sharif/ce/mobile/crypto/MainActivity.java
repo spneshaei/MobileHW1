@@ -3,6 +3,7 @@ package edu.sharif.ce.mobile.crypto;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,10 +26,11 @@ import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
 import edu.sharif.ce.mobile.crypto.utils.NetworkInterface;
 import edu.sharif.ce.mobile.crypto.utils.Rester;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     RecyclerView cryptoList;
     CryptoAdapter adapter;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private final WeakHandler handler = new WeakHandler(this);
 
@@ -55,37 +57,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
+        Rester.getInstance().getCryptoData(this);
+
         cryptoList = findViewById(R.id.crypto_list);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         adapter = new CryptoAdapter(Crypto.getCryptos());
         cryptoList.setAdapter(adapter);
         cryptoList.setLayoutManager(new LinearLayoutManager(this));
-
-        NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
-        Rester.getInstance().getCryptoData(this);
-
-        //just for test
-//        Crypto first = new Crypto("1", "Bitcoin");
-//        first.setPrice(1000);
-//        first.setImageUrl("https://miro.medium.com/max/410/1*U7phpu7aKKrU05JvMvs-wA.png");
-//        first.setPercentChange1H(2);
-//        first.setPercentChange24H(-3);
-//        first.setPercentChange7D(0);
-//        first.setSymbol("BTC");
-//
-//        Crypto second = new Crypto("2", "Etherium");
-//        second.setPrice(2000);
-//        second.setImageUrl("https://s2.coinmarketcap.com/static/img/coins/64x64/2.png");
-//        second.setPercentChange1H(-2);
-//        second.setPercentChange24H(3);
-//        second.setPercentChange7D(-4);
-//        second.setSymbol("ETH");
-//
-//        ArrayList<Crypto> sampleList = new ArrayList<>();
-//        sampleList.add(first);
-//        sampleList.add(second);
-
-
 
     }
 
@@ -95,5 +76,11 @@ public class MainActivity extends AppCompatActivity {
         TextView watchlist = findViewById(R.id.watchlist);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         watchlist.setLayoutParams(params);
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        Rester.getInstance().getCryptoData(this);
     }
 }
