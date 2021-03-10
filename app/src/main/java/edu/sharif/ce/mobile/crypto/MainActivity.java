@@ -57,9 +57,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
-        Rester.getInstance().getCryptoData(this);
-
         cryptoList = findViewById(R.id.crypto_list);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -68,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         cryptoList.setAdapter(adapter);
         cryptoList.setLayoutManager(new LinearLayoutManager(this));
 
+
+        NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
+        Rester.getInstance().getCryptoData(this);
     }
 
     public void finish_load() {
