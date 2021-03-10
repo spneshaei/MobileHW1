@@ -32,6 +32,7 @@ import edu.sharif.ce.mobile.crypto.notifhandling.NotificationCenter;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationID;
 import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
 import edu.sharif.ce.mobile.crypto.utils.NetworkInterface;
+import edu.sharif.ce.mobile.crypto.utils.Rester;
 
 
 public class ChartFragment extends Fragment {
@@ -79,7 +80,7 @@ public class ChartFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mHandler = new WeakHandler(this);
         NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.CANDLES_LOADED);
-        NetworkInterface.getCandles(crypto, type == TYPE_ONE_MONTH ? 30 : 7);
+        Rester.getInstance().getCandleData(getContext(), crypto, type == TYPE_ONE_MONTH ? 30 : 7);
     }
 
     @Override
