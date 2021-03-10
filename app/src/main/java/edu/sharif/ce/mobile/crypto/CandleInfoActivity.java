@@ -9,6 +9,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
 import edu.sharif.ce.mobile.crypto.models.Crypto;
 
 public class CandleInfoActivity extends AppCompatActivity {
@@ -23,6 +26,15 @@ public class CandleInfoActivity extends AppCompatActivity {
         mPager = findViewById(R.id.view_pager);
         adapter = new ChartAdapter(this, (Crypto) getIntent().getExtras().get("crypto"));
         mPager.setAdapter(adapter);
+
+        final String[] tabTitles = new String[]{"Last Week", "Last Month"};
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        new TabLayoutMediator(tabLayout, mPager, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                tab.setText(tabTitles[position]);
+            }
+        }).attach();
     }
 
     static class ChartAdapter extends FragmentStateAdapter {
