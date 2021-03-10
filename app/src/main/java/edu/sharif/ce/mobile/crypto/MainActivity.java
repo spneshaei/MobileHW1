@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,15 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.ybq.android.spinkit.SpinKitView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 import edu.sharif.ce.mobile.crypto.models.Crypto;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationCenter;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationID;
 import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
-import edu.sharif.ce.mobile.crypto.utils.NetworkInterface;
 import edu.sharif.ce.mobile.crypto.utils.Rester;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -44,10 +42,24 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         @Override
         public void handleMessage(Message msg) {
             MainActivity activity = this.activity.get();
-            if (activity != null &&
-                    (msg.what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI || msg.what == NotificationID.Crypto.DATA_LOADED_FROM_CACHE) && activity.cryptoList != null && activity.adapter != null) {
-                activity.adapter.notifyDataSetChanged();
-                if (msg.what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI) activity.finish_load();
+            if (activity != null) {
+                if ((msg.what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI || msg.what == NotificationID.Crypto.DATA_LOADED_FROM_CACHE) && activity.cryptoList != null && activity.adapter != null) {
+                    activity.adapter.notifyDataSetChanged();
+                    if (msg.what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI) {
+                        activity.finishLoad();
+                    }
+                } else if (msg.what == NotificationID.Crypto.NO_INTERNET_CONNECTION) {
+                    activity.finishLoadingViews();
+                    Snackbar.make(activity.findViewById(android.R.id.content), "No Internet Connection", Snackbar.LENGTH_LONG)
+                            .setAction("CLOSE", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                }
+                            })
+                            .setActionTextColor(activity.getResources().getColor(android.R.color.holo_red_light))
+                            .show();
+                }
             }
         }
     }
@@ -68,11 +80,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.DATA_LOADED_FROM_CACHE);
+        NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NO_INTERNET_CONNECTION);
         Rester.getInstance().getCryptoData(this, 1, 10);
     }
 
-    public void finish_load() {
+    public void finishLoad() {
         Rester.getInstance().saveCryptos(this);
+        finishLoadingViews();
+    }
+
+    private void finishLoadingViews() {
         SpinKitView spinKit = findViewById(R.id.spin_kit);
         spinKit.setVisibility(View.INVISIBLE);
         TextView watchlist = findViewById(R.id.watchlist);

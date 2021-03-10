@@ -1,12 +1,15 @@
 package edu.sharif.ce.mobile.crypto;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +26,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -48,6 +52,8 @@ public class ChartFragment extends Fragment {
             this.context = new WeakReference<>(context);
         }
 
+        // TODO: Loading view in this page??
+
         @Override
         public void handleMessage(Message msg) {
             ChartFragment unwrappedFragment = fragment.get();
@@ -62,6 +68,18 @@ public class ChartFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else if (msg.what == NotificationID.Candle.NO_INTERNET_CONNECTION) {
+                FragmentActivity activity = unwrappedFragment.getActivity();
+                if (activity == null) return;
+                Snackbar.make(activity.findViewById(android.R.id.content), "No Internet Connection", Snackbar.LENGTH_LONG)
+                        .setAction("CLOSE", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                            }
+                        })
+                        .setActionTextColor(activity.getResources().getColor(android.R.color.holo_red_light))
+                        .show();
             }
         }
     }
