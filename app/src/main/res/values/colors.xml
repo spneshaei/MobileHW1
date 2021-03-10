@@ -7,4 +7,7 @@
     <color name="topicColor">#122147</color>
     <color name="mainBackground">#f5fdff</color>
     <color name="crypto_backgrounds">#f0fdff</color>
+    <color name="colorRed">#F44336</color>
+    <color name="colorGray">#515151</color>
+
 </resources>

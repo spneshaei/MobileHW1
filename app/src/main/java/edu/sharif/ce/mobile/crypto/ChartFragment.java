@@ -1,5 +1,7 @@
 package edu.sharif.ce.mobile.crypto;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.charts.CandleStickChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -88,61 +91,46 @@ public class ChartFragment extends Fragment {
     }
 
     private void provideData() {
-//        CandleDataSet dataSet;
-//        switch (type) {
-//            default:
-//            case TYPE_ONE_WEEK:
-//                dataSet = new CandleDataSet(crypto.getLastWeekCandles(), "DataSet");
-//                break;
-//            case TYPE_ONE_MONTH:
-//                dataSet = new CandleDataSet(crypto.getLastMonthCandles(), "DataSet");
-//                break;
-//        }
-//        CandleData data = new CandleData(dataSet);
-//        chart.setData(data);
-//        chart.invalidate();
         chart.setHighlightPerDragEnabled(true);
         chart.setDrawBorders(true);
-        chart.setBorderColor(getResources().getColor(R.color.crypto_backgrounds));
-        YAxis yAxis = chart.getAxisLeft();
+        chart.setBorderColor(getResources().getColor(R.color.colorGray));
+        YAxis leftAxis = chart.getAxisLeft();
         YAxis rightAxis = chart.getAxisRight();
-        yAxis.setDrawGridLines(false);
+        leftAxis.setDrawGridLines(true);
         rightAxis.setDrawGridLines(false);
         chart.requestDisallowInterceptTouchEvent(true);
+        Description description = new Description();
+        description.setText(crypto.getName());
+        chart.setDescription(description);
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setDrawGridLines(false);// disable x axis grid lines
-        xAxis.setDrawLabels(false);
-//        rightAxis.setTextColor(Color.WHITE);
-        yAxis.setDrawLabels(false);
+        xAxis.setDrawLabels(true);
+        rightAxis.setTextColor(Color.WHITE);
+        leftAxis.setDrawLabels(true);
         xAxis.setGranularity(1f);
         xAxis.setGranularityEnabled(true);
         xAxis.setAvoidFirstLastClipping(true);
 
         Legend l = chart.getLegend();
-        l.setEnabled(false);
+        l.setEnabled(true);
 
         ArrayList<CandleEntry> yValsCandleStick = type == TYPE_ONE_WEEK?
                 crypto.getLastWeekCandles():crypto.getLastMonthCandles();
-        CandleDataSet set1 = new CandleDataSet(yValsCandleStick, "DataSet 1");
-//        set1.setColor(Color.rgb(80, 80, 80));
-//        set1.setShadowColor(getResources().getColor(R.color.colorLightGrayMore));
+        CandleDataSet set1 = new CandleDataSet(yValsCandleStick, "Candles");
+        set1.setColor(Color.rgb(80, 80, 80));
+        set1.setShadowColor(getResources().getColor(R.color.colorGray));
         set1.setShadowWidth(0.8f);
-//        set1.setDecreasingColor(getResources().getColor(R.color.colorRed));
-//        set1.setDecreasingPaintStyle(Paint.Style.FILL);
+        set1.setDecreasingColor(getResources().getColor(R.color.colorRed));
+        set1.setDecreasingPaintStyle(Paint.Style.FILL);
         set1.setIncreasingColor(getResources().getColor(R.color.colorAccent));
-//        set1.setIncreasingPaintStyle(Paint.Style.FILL);
-//        set1.setNeutralColor(Color.LTGRAY);
+        set1.setIncreasingPaintStyle(Paint.Style.FILL);
+        set1.setNeutralColor(Color.LTGRAY);
         set1.setDrawValues(false);
-
-
 //      create a data object with the datasets
         CandleData data = new CandleData(set1);
-
-
 //      set data
         chart.setData(data);
-
         chart.invalidate();
     }
 }
