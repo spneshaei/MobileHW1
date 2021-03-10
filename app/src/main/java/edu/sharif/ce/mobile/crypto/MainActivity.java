@@ -44,10 +44,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         @Override
         public void handleMessage(Message msg) {
             MainActivity activity = this.activity.get();
-            if (activity != null && msg.what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI
-                    && activity.cryptoList != null && activity.adapter != null) {
+            if (activity != null &&
+                    (msg.what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI || msg.what == NotificationID.Crypto.DATA_LOADED_FROM_CACHE) && activity.cryptoList != null && activity.adapter != null) {
                 activity.adapter.notifyDataSetChanged();
-                activity.finish_load();
+                if (msg.what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI) activity.finish_load();
             }
         }
     }
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
+        NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.DATA_LOADED_FROM_CACHE);
         Rester.getInstance().getCryptoData(this, 1, 10);
     }
 

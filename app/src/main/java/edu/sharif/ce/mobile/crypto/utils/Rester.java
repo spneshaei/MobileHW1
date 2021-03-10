@@ -3,7 +3,11 @@ package edu.sharif.ce.mobile.crypto.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.github.mikephil.charting.data.CandleEntry;
 import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,9 +19,12 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import edu.sharif.ce.mobile.crypto.models.Candle;
 import edu.sharif.ce.mobile.crypto.models.Crypto;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationCenter;
 import edu.sharif.ce.mobile.crypto.notifhandling.NotificationID;
@@ -60,29 +67,56 @@ public class Rester implements Subscriber {
             }
         });
     }
-//
-//    public void getCandleData(final Context context, final Crypto crypto, final int range) {
-//        executor.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    String data = readFromFile(context, "candle-" + crypto.getId() +".txt");
-//                    if (!data.equals("")) {
-//                        // data is in the cache
-//                        setCandlesFromJSON(data);
-//                        NotificationCenter.notify(NotificationID.Candle.DATA_LOADED_FROM_CACHE);
-//                    }
-//                } catch (Exception ignored) {
-//                }
-//                if (!isConnected()) {
-//                    NotificationCenter.notify(NotificationID.Candle.NO_INTERNET_CONNECTION);
-//                    return;
-//                }
-//                NotificationCenter.registerForNotification(Rester.this, NotificationID.Candle.NEW_DATA_LOADED_FOR_RESTER);
-//                NetworkInterface.getCandles(crypto, range);
-//            }
-//        });
-//    }
+
+    public void getCandleData(final Context context, final Crypto crypto, final int range) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String data = readFromFile(context, "candle-" + crypto.getId() +"-" + range +".txt");
+                    if (!data.equals("")) {
+                        // data is in the cache
+                        setCandlesFromJSON(data, crypto, range);
+                    }
+                } catch (Exception ignored) {
+                }
+                if (!isConnected()) {
+                    NotificationCenter.notify(NotificationID.Candle.NO_INTERNET_CONNECTION);
+                    return;
+                }
+                NotificationCenter.registerForNotification(Rester.this, NotificationID.Candle.NEW_DATA_LOADED_FOR_RESTER);
+                NetworkInterface.getCandles(crypto, range);
+            }
+        });
+    }
+
+    private void setCandlesFromJSON(String data, Crypto crypto, int range) {
+        ArrayList<CandleEntry> candleArrayList = new ArrayList<>();
+        try {
+            JSONArray data_array = new JSONArray(data);
+            for (int i = 0; i < range; i++) {
+                JSONObject object = (JSONObject) data_array.get(i);
+                double high = object.getDouble("price_high");
+                double low = object.getDouble("price_low");
+                double close = object.getDouble("price_close");
+                double open = object.getDouble("price_open");
+                candleArrayList.add(new Candle(crypto.getId(), high, low, close, open, range - i));
+            }
+            if (range == 30) {
+                crypto.setLastMonthCandles(candleArrayList);
+            } else if (range == 7) {
+                crypto.setLastWeekCandles(candleArrayList);
+            }
+            Collections.sort(candleArrayList, new Comparator<CandleEntry>() {
+                @Override
+                public int compare(CandleEntry candleEntry, CandleEntry t1) {
+                    return ((int) (candleEntry.getX() - t1.getX()));
+                }
+            });
+            NotificationCenter.notify(NotificationID.Candle.DATA_LOADED_FROM_CACHE);
+        } catch (Exception ignored) {
+        }
+    }
 
     private boolean isConnected() {
         try {
