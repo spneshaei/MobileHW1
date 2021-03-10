@@ -38,7 +38,7 @@ public class Rester implements Subscriber {
         executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
     }
 
-    public void getCryptoData(final Context context) {
+    public void getCryptoData(final Context context, int start, int limit) {
         executor.execute(new Runnable() {
             @Override
             public void run() {

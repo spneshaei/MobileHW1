@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
-        Rester.getInstance().getCryptoData(this);
+        Rester.getInstance().getCryptoData(this, 0, 10);
     }
 
     public void finish_load() {
@@ -81,6 +81,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
-        Rester.getInstance().getCryptoData(this);
+        Rester.getInstance().getCryptoData(this, 0, 10);
     }
 }
