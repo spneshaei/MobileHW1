@@ -17,10 +17,13 @@ import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -37,6 +40,8 @@ import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
 public class Rester implements Subscriber {
     private static final Rester ourInstance = new Rester();
     private ThreadPoolExecutor executor;
+    // TODO: potential race condition below
+    private Date timeOfLastRequest = Calendar.getInstance().getTime();
     public static Rester getInstance() {
         return ourInstance;
     }
@@ -62,6 +67,11 @@ public class Rester implements Subscriber {
                     NotificationCenter.notify(NotificationID.Crypto.NO_INTERNET_CONNECTION);
                     return;
                 }
+                if (System.currentTimeMillis() - timeOfLastRequest.getTime() < 500) {
+                    NotificationCenter.notify(NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
+                    return;
+                }
+                timeOfLastRequest = Calendar.getInstance().getTime();
                 NotificationCenter.registerForNotification(Rester.this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
                 NetworkInterface.getCryptoData(start, limit);
             }
@@ -84,6 +94,11 @@ public class Rester implements Subscriber {
                     NotificationCenter.notify(NotificationID.Candle.NO_INTERNET_CONNECTION);
                     return;
                 }
+                if (System.currentTimeMillis() - timeOfLastRequest.getTime() < 500) {
+                    NotificationCenter.notify(NotificationID.Candle.NEW_DATA_LOADED_FOR_RESTER);
+                    return;
+                }
+                timeOfLastRequest = Calendar.getInstance().getTime();
                 NotificationCenter.registerForNotification(Rester.this, NotificationID.Candle.NEW_DATA_LOADED_FOR_RESTER);
                 NetworkInterface.getCandles(crypto, range);
             }
