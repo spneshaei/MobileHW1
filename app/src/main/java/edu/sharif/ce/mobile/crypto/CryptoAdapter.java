@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import edu.sharif.ce.mobile.crypto.models.Crypto;
@@ -49,7 +50,8 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         Glide.with(context).load(thisCrypto.getImageUrl()).into(holder.image);
         holder.name.setText(thisCrypto.getName());
         holder.symbol.setText(thisCrypto.getSymbol() + " |");
-        holder.price.setText("$" + thisCrypto.getPrice());
+        DecimalFormat df = new DecimalFormat("#.###");
+        holder.price.setText("$" + df.format(thisCrypto.getPrice()));
         holder.oneHour.setText("1H: " + thisCrypto.getPercentChange1H() + "%");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
