@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             if (activity != null && msg.what == NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI
                     && activity.cryptoList != null && activity.adapter != null) {
                 activity.adapter.notifyDataSetChanged();
+                activity.finish_load();
             }
         }
     }
@@ -83,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
         adapter = new CryptoAdapter(Crypto.getCryptos());
         cryptoList.setAdapter(adapter);
         cryptoList.setLayoutManager(new LinearLayoutManager(this));
-
-        finish_load();
 
     }
 

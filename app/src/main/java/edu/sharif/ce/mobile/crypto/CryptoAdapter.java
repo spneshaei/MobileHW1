@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import edu.sharif.ce.mobile.crypto.models.Crypto;
@@ -49,8 +50,9 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         Glide.with(context).load(thisCrypto.getImageUrl()).into(holder.image);
         holder.name.setText(thisCrypto.getName());
         holder.symbol.setText(thisCrypto.getSymbol() + " |");
-        holder.price.setText("$" + thisCrypto.getPrice());
-        holder.oneHour.setText("1H: " + thisCrypto.getPercentChange1H() + "%");
+        DecimalFormat df = new DecimalFormat("#.##");
+        holder.price.setText("$" + df.format(thisCrypto.getPrice()));
+        holder.oneHour.setText("1H: " + df.format(thisCrypto.getPercentChange1H()) + "%");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +71,7 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
         } else {
             holder.oneHour.setTextColor(green);
         }
-        holder.oneDay.setText("1D: " + thisCrypto.getPercentChange24H() + "%");
+        holder.oneDay.setText("1D: " + df.format(thisCrypto.getPercentChange24H()) + "%");
 
         if (thisCrypto.getPercentChange24H() < 0) {
             holder.oneDay.setTextColor(red);
@@ -77,7 +79,7 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.ViewHolder
             holder.oneDay.setTextColor(green);
         }
 
-        holder.oneWeek.setText("7D: " + thisCrypto.getPercentChange7D() + "%");
+        holder.oneWeek.setText("7D: " + df.format(thisCrypto.getPercentChange7D()) + "%");
 
         if (thisCrypto.getPercentChange7D() < 0) {
             holder.oneWeek.setTextColor(red);
