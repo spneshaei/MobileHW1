@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -93,9 +95,16 @@ public class ChartFragment extends Fragment {
     public static final int TYPE_ONE_MONTH = 1;
     public static final int TYPE_ONE_WEEK = 0;
 
-    public ChartFragment(Crypto crypto, int type) {
-        this.type = type;
-        this.crypto = crypto;
+    public ChartFragment() {
+    }
+
+    public static ChartFragment newInstance(Crypto crypto, int type) {
+        Bundle args = new Bundle();
+        args.putSerializable("crypto", crypto);
+        args.putInt("type", type);
+        ChartFragment fragment = new ChartFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public int getRangeFromType(int type) {
@@ -105,6 +114,8 @@ public class ChartFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.type = getArguments().getInt("type");
+        this.crypto = (Crypto) getArguments().getSerializable("crypto");
         mHandler = new WeakHandler(this, getContext());
         NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.NEW_DATA_LOADED_FOR_UI);
         NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.DATA_LOADED_FROM_CACHE);

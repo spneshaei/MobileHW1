@@ -92,8 +92,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.DATA_LOADED_FROM_CACHE);
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NO_INTERNET_CONNECTION);
         Log.e("Rester_Main", "getCryData");
+        System.out.println("BEFORE LOADING...");
         Rester.getInstance().getCryptoData(this, 1, 0);
-
+        System.out.println("LOADED...");
         cryptoList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
