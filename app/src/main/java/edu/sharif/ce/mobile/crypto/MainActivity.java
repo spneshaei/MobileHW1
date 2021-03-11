@@ -27,6 +27,7 @@ import edu.sharif.ce.mobile.crypto.utils.Rester;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    TextView pullToRefresh;
     SpinKitView spinKit;
     TextView watchlist;
     RecyclerView cryptoList;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         spinKit = findViewById(R.id.spin_kit);
         watchlist = findViewById(R.id.watchlist);
+        pullToRefresh = findViewById(R.id.pullToRefresh);
 
         cryptoList = findViewById(R.id.crypto_list);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
@@ -107,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     if (loading && (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         loading = false;
                         spinKit.setVisibility(View.VISIBLE);
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        pullToRefresh.setVisibility(View.VISIBLE);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         watchlist.setLayoutParams(params);
                         Rester.getInstance().getCryptoData(MainActivity.this, Crypto.getCryptos().size() + 1, 10);
                         loading = true;
@@ -124,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void finishLoadingViews() {
         spinKit.setVisibility(View.INVISIBLE);
+        pullToRefresh.setVisibility(View.GONE);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         watchlist.setLayoutParams(params);
         swipeRefreshLayout.setRefreshing(false);

@@ -34,6 +34,17 @@
                 android:textColor="@color/topicColor"
                 android:textSize="26sp" />
 
+            <TextView
+                android:id="@+id/pullToRefresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginStart="3dp"
+                android:text="@string/main_page_inner_title"
+                android:textColor="@color/topicColor"
+                android:textSize="16sp" />
+
             <com.github.ybq.android.spinkit.SpinKitView
                 android:id="@+id/spin_kit"
                 style="@style/SpinKitView.Large.FadingCircle"

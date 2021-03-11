@@ -2,4 +2,5 @@
     <string name="app_name">Crypto</string>
     <string name="crypto_image">Crypto Image</string>
     <string name="main_page_title">Watchlist</string>
+    <string name="main_page_inner_title">(pull to refresh)</string>
 </resources>

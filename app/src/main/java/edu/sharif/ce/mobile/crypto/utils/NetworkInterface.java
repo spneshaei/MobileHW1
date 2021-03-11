@@ -154,7 +154,7 @@ public class NetworkInterface {
             public void onFailure(Request request, IOException e) {
                 Log.e("network", Objects.requireNonNull(e.getMessage()));
             }
-            
+
             @Override
             public void onResponse(Response response) throws IOException {
                 if (!response.isSuccessful()) {
