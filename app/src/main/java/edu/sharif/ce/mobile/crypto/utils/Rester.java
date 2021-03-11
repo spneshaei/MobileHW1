@@ -39,7 +39,6 @@ import edu.sharif.ce.mobile.crypto.notifhandling.Subscriber;
 public class Rester implements Subscriber {
     private static final Rester ourInstance = new Rester();
     private ThreadPoolExecutor executor;
-    // TODO: potential race condition below
     private Date timeOfLastRequest = Calendar.getInstance().getTime();
     private boolean isFirstRequest = true;
     public static Rester getInstance() {
