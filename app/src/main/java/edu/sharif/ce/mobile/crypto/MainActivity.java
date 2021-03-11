@@ -8,6 +8,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -26,11 +27,17 @@ import edu.sharif.ce.mobile.crypto.utils.Rester;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    SpinKitView spinKit;
+    TextView watchlist;
     RecyclerView cryptoList;
     CryptoAdapter adapter;
     SwipeRefreshLayout swipeRefreshLayout;
+    LinearLayoutManager layoutManager;
 
     private final WeakHandler handler = new WeakHandler(this);
+
+    private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private static class WeakHandler extends Handler implements Subscriber {
         private final WeakReference<MainActivity> activity;
@@ -69,19 +76,42 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        spinKit = findViewById(R.id.spin_kit);
+        watchlist = findViewById(R.id.watchlist);
+
         cryptoList = findViewById(R.id.crypto_list);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         adapter = new CryptoAdapter(Crypto.getCryptos());
         cryptoList.setAdapter(adapter);
-        cryptoList.setLayoutManager(new LinearLayoutManager(this));
-
+        layoutManager = new LinearLayoutManager(this);
+        cryptoList.setLayoutManager(layoutManager);
 
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.DATA_LOADED_FROM_CACHE);
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NO_INTERNET_CONNECTION);
+        Log.e("Rester_Main", "getCryData");
         Rester.getInstance().getCryptoData(this, 1, 0);
+
+        cryptoList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) { //check for scroll down
+                    visibleItemCount = layoutManager.getChildCount();
+                    totalItemCount = layoutManager.getItemCount();
+                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+                    if (loading && (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        loading = false;
+                        spinKit.setVisibility(View.VISIBLE);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        watchlist.setLayoutParams(params);
+                        Rester.getInstance().getCryptoData(MainActivity.this, Crypto.getCryptos().size() + 1, 10);
+                        loading = true;
+                    }
+                }
+            }
+        });
     }
 
     public void finishLoad() {
@@ -90,9 +120,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void finishLoadingViews() {
-        SpinKitView spinKit = findViewById(R.id.spin_kit);
         spinKit.setVisibility(View.INVISIBLE);
-        TextView watchlist = findViewById(R.id.watchlist);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         watchlist.setLayoutParams(params);
         swipeRefreshLayout.setRefreshing(false);

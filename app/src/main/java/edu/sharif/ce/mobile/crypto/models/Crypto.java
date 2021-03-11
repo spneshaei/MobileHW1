@@ -23,16 +23,16 @@ public class Crypto implements Serializable {
     private ArrayList<CandleEntry> lastWeekCandles;
     private ArrayList<CandleEntry> lastMonthCandles;
 
-    public static Crypto getCryptoWithID(String id) {
+    public synchronized static Crypto getCryptoWithID(String id) {
         for (Crypto crypto : cryptos) if (crypto.id.equals(id)) return crypto;
         return null;
     }
 
-    public String getCandleData() {
+    public synchronized String getCandleData() {
         return candleData;
     }
 
-    public void setCandleData(String candleData) {
+    public synchronized void setCandleData(String candleData) {
         this.candleData = candleData;
     }
 
@@ -43,95 +43,91 @@ public class Crypto implements Serializable {
         this.lastWeekCandles = new ArrayList<>();
     }
 
-    public String getId() {
+    public synchronized String getId() {
         return id;
     }
 
-    public void setLastWeekCandles(ArrayList<CandleEntry> lastWeekCandles) {
+    public synchronized void setLastWeekCandles(ArrayList<CandleEntry> lastWeekCandles) {
         this.lastWeekCandles = lastWeekCandles;
     }
 
-    public void setLastMonthCandles(ArrayList<CandleEntry> lastMonthCandles) {
+    public synchronized void setLastMonthCandles(ArrayList<CandleEntry> lastMonthCandles) {
         this.lastMonthCandles = lastMonthCandles;
     }
 
-    public void setId(String id) {
+    public synchronized void setId(String id) {
         this.id = id;
     }
 
-    public double getPrice() {
+    public synchronized double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public synchronized void setPrice(double price) {
         this.price = price;
     }
 
-    public String getName() {
+    public synchronized String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSymbol() {
+    public synchronized String getSymbol() {
         return symbol;
     }
 
-    public void setSymbol(String symbol) {
+    public synchronized void setSymbol(String symbol) {
         this.symbol = symbol;
     }
 
-    public String getImageUrl() {
+    public synchronized String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public synchronized void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
-    public double getPercentChange1H() {
+    public synchronized double getPercentChange1H() {
         return percentChange1H;
     }
 
-    public void setPercentChange1H(double percentChange1H) {
+    public synchronized void setPercentChange1H(double percentChange1H) {
         this.percentChange1H = percentChange1H;
     }
 
-    public double getPercentChange24H() {
+    public synchronized double getPercentChange24H() {
         return percentChange24H;
     }
 
-    public void setPercentChange24H(double percentChange24H) {
+    public synchronized void setPercentChange24H(double percentChange24H) {
         this.percentChange24H = percentChange24H;
     }
 
-    public double getPercentChange7D() {
+    public synchronized double getPercentChange7D() {
         return percentChange7D;
     }
 
-    public void setPercentChange7D(double percentChange7D) {
+    public synchronized void setPercentChange7D(double percentChange7D) {
         this.percentChange7D = percentChange7D;
     }
 
-    public ArrayList<CandleEntry> getLastWeekCandles() {
+    public synchronized ArrayList<CandleEntry> getLastWeekCandles() {
         return lastWeekCandles;
     }
 
-    public ArrayList<CandleEntry> getLastMonthCandles() {
+    public synchronized ArrayList<CandleEntry> getLastMonthCandles() {
         return lastMonthCandles;
     }
 
-    public static ArrayList<Crypto> getCryptos() {
+    public synchronized static ArrayList<Crypto> getCryptos() {
         return cryptos;
     }
 
-    private static void clearCryptos() {
+    private synchronized static void clearCryptos() {
         cryptos.clear();
     }
 
-    public static void addAllCryptosIfNotRepeated(ArrayList<Crypto> newCryptos) {
+    public synchronized static void addAllCryptosIfNotRepeated(ArrayList<Crypto> newCryptos) {
         for (Crypto newCrypto : newCryptos) {
             Crypto oldCrypto = getCryptoWithID(newCrypto.id);
             if (oldCrypto != null) {
@@ -142,7 +138,7 @@ public class Crypto implements Serializable {
         }
     }
 
-    private static void copyCryptoDetails(Crypto newCrypto, Crypto oldCrypto) {
+    private synchronized static void copyCryptoDetails(Crypto newCrypto, Crypto oldCrypto) {
         oldCrypto.id = newCrypto.id;
         oldCrypto.imageUrl = newCrypto.imageUrl;
         oldCrypto.lastMonthCandles = newCrypto.lastMonthCandles;
@@ -157,7 +153,7 @@ public class Crypto implements Serializable {
     }
 
 
-    public static void setCryptos(ArrayList<Crypto> newCryptos) {
+    public synchronized static void setCryptos(ArrayList<Crypto> newCryptos) {
         clearCryptos();
         cryptos.addAll(newCryptos);
     }

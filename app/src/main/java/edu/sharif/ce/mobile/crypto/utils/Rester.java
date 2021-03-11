@@ -78,7 +78,7 @@ public class Rester implements Subscriber {
                 }
                 timeOfLastRequest = Calendar.getInstance().getTime();
                 NotificationCenter.registerForNotification(Rester.this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
-                NetworkInterface.getCryptoData(start, limit > 0 ? limit : Crypto.getCryptos().size());
+                NetworkInterface.getCryptoData(start, limit > 0 ? limit : Math.max(10, Crypto.getCryptos().size()));
             }
         });
     }
