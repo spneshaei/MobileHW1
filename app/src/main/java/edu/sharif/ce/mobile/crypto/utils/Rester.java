@@ -123,11 +123,8 @@ public class Rester implements Subscriber {
                 candleArrayList.add(new Candle(crypto.getId(), high, low, close, open, range - i));
             }
             crypto.setCandleData(data);
-            if (range == 30) {
-                crypto.setLastMonthCandles(candleArrayList);
-            } else if (range == 7) {
-                crypto.setLastWeekCandles(candleArrayList);
-            }
+            if (range == 30) crypto.setLastMonthCandles(candleArrayList);
+            else if (range == 7) crypto.setLastWeekCandles(candleArrayList);
             Collections.sort(candleArrayList, new Comparator<CandleEntry>() {
                 @Override
                 public int compare(CandleEntry candleEntry, CandleEntry t1) {
@@ -139,7 +136,7 @@ public class Rester implements Subscriber {
         }
     }
 
-    private boolean isConnected() {
+    private synchronized boolean isConnected() {
         try {
             int timeoutMs = 1500;
             Socket sock = new Socket();
@@ -152,12 +149,12 @@ public class Rester implements Subscriber {
         }
     }
 
-    private void setCryptosFromJSON(String json) {
+    private synchronized void setCryptosFromJSON(String json) {
         Crypto[] cryptos = new Gson().fromJson(json, Crypto[].class);
         Crypto.setCryptos(new ArrayList<>(Arrays.asList(cryptos)));
     }
 
-    private String readFromFile(Context context, String file) throws Exception {
+    private synchronized String readFromFile(Context context, String file) throws Exception {
         InputStream inputStream = context.openFileInput(file);
         if (inputStream == null) return "";
         String ret = "";
@@ -173,7 +170,7 @@ public class Rester implements Subscriber {
         return ret;
     }
 
-    public void saveCryptos(final Context context) {
+    public synchronized void saveCryptos(final Context context) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -182,7 +179,7 @@ public class Rester implements Subscriber {
         });
     }
 
-    public void saveCandle(final Context context, final Crypto crypto, final int range) {
+    public synchronized void saveCandle(final Context context, final Crypto crypto, final int range) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -191,7 +188,7 @@ public class Rester implements Subscriber {
         });
     }
 
-    private void writeToFile(String file, Context context, String data) {
+    private synchronized void writeToFile(String file, Context context, String data) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(file, Context.MODE_PRIVATE));
             outputStreamWriter.write(data);
