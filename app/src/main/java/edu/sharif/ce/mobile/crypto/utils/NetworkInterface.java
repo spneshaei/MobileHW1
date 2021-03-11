@@ -121,7 +121,7 @@ public class NetworkInterface {
                         }
                         // load in static here...
 //                        if (start >= Crypto.getCryptos().size()) {
-                            Crypto.addAllCryptosIfNotRepeated(cryptoArrayList);
+                        Crypto.addAllCryptosIfNotRepeated(cryptoArrayList);
 //                        } else {
 ////                            NetworkInterface.cryptoArrayList.replaceAll();
 //                        }
@@ -154,9 +154,7 @@ public class NetworkInterface {
             public void onFailure(Request request, IOException e) {
                 Log.e("network", Objects.requireNonNull(e.getMessage()));
             }
-
-            // TODO: In case of error message in body??
-
+            
             @Override
             public void onResponse(Response response) throws IOException {
                 if (!response.isSuccessful()) {

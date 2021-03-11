@@ -49,7 +49,6 @@ public class ChartFragment extends Fragment {
             this.context = new WeakReference<>(context);
         }
 
-        // TODO: Loading view in this page??
 
         @Override
         public void handleMessage(Message msg) {
@@ -159,7 +158,6 @@ public class ChartFragment extends Fragment {
         ArrayList<CandleEntry> yValsCandleStick = type == TYPE_ONE_WEEK ?
                 crypto.getLastWeekCandles() : crypto.getLastMonthCandles();
         if (yValsCandleStick == null || yValsCandleStick.isEmpty()) return;
-        // TODO: May crash bug still exist??
         CandleDataSet set1 = new CandleDataSet(yValsCandleStick, "Candles");
         set1.setColor(Color.rgb(80, 80, 80));
         set1.setShadowColor(getResources().getColor(R.color.colorGray));
