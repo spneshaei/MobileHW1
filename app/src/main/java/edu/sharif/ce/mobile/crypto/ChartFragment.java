@@ -179,6 +179,5 @@ public class ChartFragment extends Fragment {
 //      set data
         chart.setData(data);
         chart.invalidate();
-//        chart.animateXY(200,200);
     }
 }
