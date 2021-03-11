@@ -27,7 +27,7 @@ import edu.sharif.ce.mobile.crypto.notifhandling.NotificationID;
 
 public class NetworkInterface {
     private final static String API_KEY_FOR_COIN_MARKET_CAP = "8c4eece6-2099-4a21-982e-7880a4d2a090"; //"ae590806-c68e-46c5-8577-e5640c7d4b41";
-    private final static String API_KEY_FOR_COIN_API = "B7F93831-CA70-46CC-A721-E73AD6ED0282";
+    private final static String API_KEY_FOR_COIN_API = "1D0238A5-FEDF-42EB-86F4-AE838AE2C9E7";
 
     public static void getCryptoData(final int start, int limit) {
         OkHttpClient okHttpClient = new OkHttpClient();
