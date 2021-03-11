@@ -72,6 +72,7 @@ public class NetworkInterface {
                             cryptoArrayList.add(crypto);
                         }
                         NetworkInterface.getCryptoImageUrls(start, cryptoArrayList);
+                        response.body().close();
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
                     }
@@ -126,6 +127,7 @@ public class NetworkInterface {
 ////                            NetworkInterface.cryptoArrayList.replaceAll();
 //                        }
                         NotificationCenter.notify(NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
+                        response.body().close();
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
                     }
@@ -186,6 +188,7 @@ public class NetworkInterface {
                             }
                         });
                         NotificationCenter.notify(NotificationID.Candle.NEW_DATA_LOADED_FOR_UI);
+                        response.body().close();
                     } catch (JSONException e) {
                         Log.e("json_parser", Objects.requireNonNull(e.getMessage()));
                     }

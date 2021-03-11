@@ -178,7 +178,7 @@ public class ChartFragment extends Fragment {
         CandleData data = new CandleData(set1);
 //      set data
         chart.setData(data);
-//        chart.invalidate();
-        chart.animateXY(200,200);
+        chart.invalidate();
+//        chart.animateXY(200,200);
     }
 }
