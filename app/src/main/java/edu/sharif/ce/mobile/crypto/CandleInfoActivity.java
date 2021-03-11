@@ -20,15 +20,13 @@ public class CandleInfoActivity extends AppCompatActivity {
 
     ViewPager2 mPager;
     ChartAdapter adapter;
-    Crypto crypto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_candle_info);
-        this.crypto = (Crypto) getIntent().getExtras().get("crypto");
         mPager = findViewById(R.id.view_pager);
-        adapter = new ChartAdapter(this);
+        adapter = new ChartAdapter(this, (Crypto) getIntent().getExtras().get("crypto"));
         mPager.setAdapter(adapter);
 
         final String[] tabTitles = new String[]{"Last Week", "Last Month"};
@@ -41,11 +39,12 @@ public class CandleInfoActivity extends AppCompatActivity {
         }).attach();
     }
 
-    class ChartAdapter extends FragmentStateAdapter {
-//        Crypto crypto;
+    static class ChartAdapter extends FragmentStateAdapter {
+        Crypto crypto;
 
-        public ChartAdapter(@NonNull FragmentActivity fragmentActivity) {
+        public ChartAdapter(@NonNull FragmentActivity fragmentActivity, Crypto crypto) {
             super(fragmentActivity);
+            this.crypto = crypto;
         }
 
         @NonNull
@@ -67,20 +66,6 @@ public class CandleInfoActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return 2;
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("crypto", crypto);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null && savedInstanceState.containsKey("crypto")) {
-            this.crypto = (Crypto) savedInstanceState.get("crypto");
         }
     }
 }
