@@ -140,7 +140,7 @@ public class ChartFragment extends Fragment {
         rightAxis.setDrawGridLines(false);
         chart.requestDisallowInterceptTouchEvent(true);
         Description description = new Description();
-        description.setText(crypto.getName());
+        description.setText(crypto.getName() + " | " + crypto.getSymbol());
         chart.setDescription(description);
         description.setTextSize(16);
         description.setYOffset(10);
