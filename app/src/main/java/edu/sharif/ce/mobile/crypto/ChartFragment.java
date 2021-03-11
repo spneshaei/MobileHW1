@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.CandleStickChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -177,6 +178,7 @@ public class ChartFragment extends Fragment {
         CandleData data = new CandleData(set1);
 //      set data
         chart.setData(data);
-        chart.invalidate();
+//        chart.invalidate();
+        chart.animateXY(200,200);
     }
 }
