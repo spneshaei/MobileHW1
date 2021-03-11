@@ -12,9 +12,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -63,7 +65,7 @@ public class ChartFragment extends Fragment {
                     unwrappedFragment.progressBar.setVisibility(View.GONE);
                 }
                 try {
-                    unwrappedFragment.provideData();
+                    unwrappedFragment.provideData(msg.what);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -131,7 +133,7 @@ public class ChartFragment extends Fragment {
         return view;
     }
 
-    private void provideData() {
+    private void provideData(int what) {
         chart.setHighlightPerDragEnabled(true);
         chart.setDrawBorders(true);
         chart.setBorderColor(getResources().getColor(R.color.colorGray));
@@ -178,6 +180,28 @@ public class ChartFragment extends Fragment {
         CandleData data = new CandleData(set1);
 //      set data
         chart.setData(data);
-        chart.invalidate();
+        if (what == NotificationID.Candle.NEW_DATA_LOADED_FOR_UI && (chart.getAnimation() != null) && (! chart.getAnimation().hasEnded())) {
+            chart.getAnimation().setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    Log.d("animation","Started");
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    chart.invalidate();
+                    Log.d("animation","ended");
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }else if (what == NotificationID.Candle.DATA_LOADED_FROM_CACHE){
+            chart.animateXY(400,400);
+        }else{
+            chart.invalidate();
+        }
     }
 }
