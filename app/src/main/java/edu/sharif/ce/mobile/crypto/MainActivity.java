@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(900);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -142,6 +142,11 @@ public class ChartFragment extends Fragment {
         Description description = new Description();
         description.setText(crypto.getName());
         chart.setDescription(description);
+        description.setTextSize(16);
+        description.setYOffset(10);
+        description.setXOffset(10);
+        description.setTextColor(getResources().getColor(R.color.topicColor));
+        chart.setBackgroundColor(getResources().getColor(R.color.crypto_backgrounds));
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setDrawGridLines(false);// disable x axis grid lines
