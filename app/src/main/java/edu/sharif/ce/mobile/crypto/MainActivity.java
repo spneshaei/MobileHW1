@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NEW_DATA_LOADED_FOR_UI);
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.DATA_LOADED_FROM_CACHE);
         NotificationCenter.registerForNotification(this.handler, NotificationID.Crypto.NO_INTERNET_CONNECTION);
-        Rester.getInstance().getCryptoData(this, 1, 10);
+        Rester.getInstance().getCryptoData(this, 1, 0);
     }
 
     public void finishLoad() {
@@ -104,6 +104,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void refresh() {
-        Rester.getInstance().getCryptoData(this, 1, 10);
+        Rester.getInstance().getCryptoData(this, 1, 0);
     }
 }

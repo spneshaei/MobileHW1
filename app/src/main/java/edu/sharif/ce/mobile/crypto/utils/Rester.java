@@ -51,6 +51,11 @@ public class Rester implements Subscriber {
     }
 
     public void getCryptoData(final Context context, final int start, final int limit) {
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -73,7 +78,7 @@ public class Rester implements Subscriber {
                 }
                 timeOfLastRequest = Calendar.getInstance().getTime();
                 NotificationCenter.registerForNotification(Rester.this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
-                NetworkInterface.getCryptoData(start, limit);
+                NetworkInterface.getCryptoData(start, limit > 0 ? limit : Crypto.getCryptos().size());
             }
         });
     }
