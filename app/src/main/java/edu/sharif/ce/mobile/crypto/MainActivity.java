@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         loading = false;
                         spinKit.setVisibility(View.VISIBLE);
                         pullToRefresh.setVisibility(View.VISIBLE);
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         watchlist.setLayoutParams(params);
                         Rester.getInstance().getCryptoData(MainActivity.this, Crypto.getCryptos().size() + 1, 10);
                         loading = true;
@@ -136,10 +137,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void finishLoadingViews() {
-        spinKit.setVisibility(View.INVISIBLE);
+        spinKit.setVisibility(View.GONE);
         pullToRefresh.setVisibility(View.GONE);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         watchlist.setLayoutParams(params);
+        watchlist.setGravity(Gravity.CENTER);
         swipeRefreshLayout.setRefreshing(false);
     }
 
