@@ -17,7 +17,6 @@ import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -42,8 +41,27 @@ public class Rester implements Subscriber {
     private ThreadPoolExecutor executor;
     // TODO: potential race condition below
     private Date timeOfLastRequest = Calendar.getInstance().getTime();
+    private boolean isFirstRequest = true;
     public static Rester getInstance() {
         return ourInstance;
+    }
+
+    private boolean isFirstRequest() {
+        return isFirstRequest;
+    }
+
+    private void didFirstRequest() {
+        isFirstRequest = false;
+    }
+
+    private synchronized long getTimeOfLastRequest() {
+        if (isFirstRequest()) return 0;
+        return timeOfLastRequest.getTime();
+    }
+
+    private synchronized void setTimeOfLastRequest(Date timeOfLastRequest) {
+        didFirstRequest();
+        this.timeOfLastRequest = timeOfLastRequest;
     }
 
     private Rester() {
@@ -72,11 +90,11 @@ public class Rester implements Subscriber {
                     NotificationCenter.notify(NotificationID.Crypto.NO_INTERNET_CONNECTION);
                     return;
                 }
-                if (System.currentTimeMillis() - timeOfLastRequest.getTime() < 500) {
+                if (System.currentTimeMillis() - getTimeOfLastRequest() < 500) {
                     NotificationCenter.notify(NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
                     return;
                 }
-                timeOfLastRequest = Calendar.getInstance().getTime();
+                setTimeOfLastRequest(Calendar.getInstance().getTime());
                 NotificationCenter.registerForNotification(Rester.this, NotificationID.Crypto.NEW_DATA_LOADED_FOR_RESTER);
                 NetworkInterface.getCryptoData(start, limit > 0 ? limit : Math.max(10, Crypto.getCryptos().size()));
             }
@@ -99,11 +117,11 @@ public class Rester implements Subscriber {
                     NotificationCenter.notify(NotificationID.Candle.NO_INTERNET_CONNECTION);
                     return;
                 }
-                if (System.currentTimeMillis() - timeOfLastRequest.getTime() < 500) {
+                if (System.currentTimeMillis() - getTimeOfLastRequest() < 500) {
                     NotificationCenter.notify(NotificationID.Candle.NEW_DATA_LOADED_FOR_RESTER);
                     return;
                 }
-                timeOfLastRequest = Calendar.getInstance().getTime();
+                setTimeOfLastRequest(Calendar.getInstance().getTime());
                 NotificationCenter.registerForNotification(Rester.this, NotificationID.Candle.NEW_DATA_LOADED_FOR_RESTER);
                 NetworkInterface.getCandles(crypto, range);
             }
