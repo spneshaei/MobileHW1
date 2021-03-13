@@ -58,16 +58,20 @@ public class ChartFragment extends Fragment {
             ChartFragment unwrappedFragment = fragment.get();
             Context unwrappedContext = context.get();
             if (unwrappedFragment == null || unwrappedContext == null) return;
-            if (msg.what == NotificationID.Candle.NEW_DATA_LOADED_FOR_UI || msg.what == NotificationID.Candle.DATA_LOADED_FROM_CACHE) {
+            if (msg.what == NotificationID.Candle.NEW_DATA_LOADED_FOR_UI || msg.what == NotificationID.Candle.NO_DATA_LOADED_FOR_UI || msg.what == NotificationID.Candle.DATA_LOADED_FROM_CACHE) {
                 if (msg.what == NotificationID.Candle.NEW_DATA_LOADED_FOR_UI) {
                     Rester.getInstance().saveCandle(unwrappedContext, unwrappedFragment.crypto,
                             unwrappedFragment.getRangeFromType(unwrappedFragment.type));
                     unwrappedFragment.progressBar.setVisibility(View.GONE);
                 }
-                try {
-                    unwrappedFragment.provideData(msg.what);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (msg.what == NotificationID.Candle.NO_DATA_LOADED_FOR_UI) {
+                    unwrappedFragment.progressBar.setVisibility(View.GONE);
+                } else {
+                    try {
+                        unwrappedFragment.provideData(msg.what);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             } else if (msg.what == NotificationID.Candle.NO_INTERNET_CONNECTION) {
                 FragmentActivity activity = unwrappedFragment.getActivity();
@@ -120,6 +124,7 @@ public class ChartFragment extends Fragment {
         this.crypto = (Crypto) getArguments().getSerializable("crypto");
         mHandler = new WeakHandler(this, getContext());
         NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.NEW_DATA_LOADED_FOR_UI);
+        NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.NO_DATA_LOADED_FOR_UI);
         NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.DATA_LOADED_FROM_CACHE);
         NotificationCenter.registerForNotification(mHandler, NotificationID.Candle.NO_INTERNET_CONNECTION);
         Rester.getInstance().getCandleData(getContext(), crypto, getRangeFromType(type));
@@ -180,7 +185,7 @@ public class ChartFragment extends Fragment {
         CandleData data = new CandleData(set1);
 //      set data
         chart.setData(data);
-        if (what == NotificationID.Candle.NEW_DATA_LOADED_FOR_UI && (chart.getAnimation() != null) && (! chart.getAnimation().hasEnded())) {
+        if ((what == NotificationID.Candle.NEW_DATA_LOADED_FOR_UI || what == NotificationID.Candle.NO_DATA_LOADED_FOR_UI) && (chart.getAnimation() != null) && (! chart.getAnimation().hasEnded())) {
             chart.getAnimation().setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {

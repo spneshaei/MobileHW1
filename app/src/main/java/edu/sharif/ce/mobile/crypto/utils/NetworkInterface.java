@@ -163,6 +163,10 @@ public class NetworkInterface {
                     Log.e("network", response.body().string());
                 } else {
                     String body = response.body().string();
+                    if (body.equals("[]")) {
+                        NotificationCenter.notify(NotificationID.Candle.NO_DATA_LOADED_FOR_UI);
+                        return;
+                    }
                     Log.d("response", body);
                     try {
                         ArrayList<CandleEntry> candleArrayList = new ArrayList<>();

@@ -19,7 +19,7 @@ public class Crypto implements Serializable {
     private double percentChange1H;
     private double percentChange24H;
     private double percentChange7D;
-    private String candleData;
+    private String candleData = "";
     private ArrayList<CandleEntry> lastWeekCandles;
     private ArrayList<CandleEntry> lastMonthCandles;
 
